@@ -11,3 +11,6 @@ c:\users\dark fate\documents\visual studio 2013\Projects\WeaponDB\WeaponDB\obj\D
 C:\Users\Dark Fate\documents\visual studio 2013\Projects\WeaponDB\WeaponDB\bin\Debug\HtmlAgilityPack.dll
 C:\Users\Dark Fate\documents\visual studio 2013\Projects\WeaponDB\WeaponDB\bin\Debug\itextsharp.dll
 C:\Users\Dark Fate\documents\visual studio 2013\Projects\WeaponDB\WeaponDB\obj\Debug\WeaponDB.Form1.resources
+E:\WeaponDB\WeaponDB\WeaponDB\WeaponDB\bin\Debug\WeaponDB.exe.config
+E:\WeaponDB\WeaponDB\WeaponDB\WeaponDB\obj\Debug\WeaponDB.exe
+E:\WeaponDB\WeaponDB\WeaponDB\WeaponDB\obj\Debug\WeaponDB.pdb
