@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        <name>VelocityDbWindowsPhone</name>
+        <name>VelocityDBUniversalWindows</name>
     </assembly>
     <members>
         <member name="T:VelocityDb.AllObjects`1">
@@ -74,6 +74,15 @@
             <param name="index">The index requested</param>
             <returns>Element at requested index</returns>
         </member>
+        <member name="M:VelocityDb.AllObjectsExtension.Skip``1(VelocityDb.AllObjects{``0},System.Int32)">
+            <summary>
+            Bypasses a specified number of elements in a sequence and then returns the remaining elements. Overrides <see cref="M:System.Linq.Enumerable.Skip``1(System.Collections.Generic.IEnumerable{``0},System.Int32)"/> for improved performance
+            </summary>
+            <typeparam name="TSource">The type of the elements of source</typeparam>
+            <param name="source">Source collection</param>
+            <param name="count">The number of elements to skip before returning the remaining elements.</param>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/>that contains the elements that occur after the specified index in the input sequence.</returns>
+        </member>
         <member name="T:VelocityDb.AutoPlacement">
             <summary>
             This is the placement manager of objects persisted using <see cref="M:VelocityDb.Session.SessionBase.Persist(System.Object)"/>, 
@@ -121,6 +130,9 @@
             <summary>
             Wrapper object for a byte[] of data for comparing objects within a BTreeSet. Wrapper is used so that this data can be placed on a seperate <see cref="T:VelocityDb.Page"/>
             </summary>
+        </member>
+        <member name="M:VelocityDb.Collection.BTree.BTreeByteArray.ReadMe(VelocityDb.TypeInfo.TypeVersion,System.Byte[],System.Int32@,VelocityDb.Session.SessionBase,VelocityDb.Page,System.Boolean,VelocityDb.TypeInfo.Schema,System.Boolean,System.Collections.Generic.List{VelocityDb.IOptimizedPersistable},System.Int32,System.Int32,System.Boolean)">
+            <inheritdoc />
         </member>
         <member name="P:VelocityDb.Collection.BTree.BTreeByteArray.Cache">
             <summary>
@@ -397,11 +409,22 @@
             </summary>
             <param name="session">The active session</param>
         </member>
+        <member name="T:VelocityDb.Collection.BTree.BTreeInternal`2">
+            <inheritdoc />
+        </member>
         <member name="M:VelocityDb.Collection.BTree.BTreeInternal`2.Persist(VelocityDb.Placement,VelocityDb.Session.SessionBase,System.Boolean,System.Boolean,System.Collections.Generic.Queue{VelocityDb.IOptimizedPersistable})">
             <inheritdoc />
         </member>
         <member name="M:VelocityDb.Collection.BTree.BTreeInternal`2.Unpersist(VelocityDb.Session.SessionBase)">
             <inheritdoc />
+        </member>
+        <member name="T:VelocityDb.Collection.BTree.BTreeInternalBase`2">
+            <summary>
+            Represents a collection of keys that is maintained in sorted order. Each key has an associated value. A persistent BTree references its contained objects by Oid instead of direct object references.
+            This way, we will only open the referenced objects on demand which reduces memory usage and initial BTree load time. Exceptions are ValueType keys and values.
+            </summary>
+            <typeparam name="Key">The key type of this collection</typeparam>  
+            <typeparam name="Value">The value type of this collection</typeparam>
         </member>
         <member name="P:VelocityDb.Collection.BTree.BTreeInternalBase`2.Cache">
             <summary>
@@ -414,6 +437,9 @@
             </summary>
         </member>
         <member name="M:VelocityDb.Collection.BTree.BTreeInternalBase`2.Persist(VelocityDb.Placement,VelocityDb.Session.SessionBase,System.Boolean,System.Boolean,System.Collections.Generic.Queue{VelocityDb.IOptimizedPersistable})">
+            <inheritdoc />
+        </member>
+        <member name="T:VelocityDb.Collection.BTree.BTreeLeaf`2">
             <inheritdoc />
         </member>
         <member name="P:VelocityDb.Collection.BTree.BTreeLeaf`2.Keys">
@@ -443,10 +469,38 @@
         <member name="P:VelocityDb.Collection.BTree.BTreeLeaf`2.Cache">
             <inheritdoc />
         </member>
+        <member name="P:VelocityDb.Collection.BTree.BTreeLeafBase`2.Cache">
+            <inheritdoc />
+        </member>
+        <member name="P:VelocityDb.Collection.BTree.BTreeLeafBase`2.Keys">
+            <summary>
+            Gets the keys for this leaf node
+            </summary>
+        </member>
+        <member name="P:VelocityDb.Collection.BTree.BTreeLeafBase`2.Values">
+            <summary>
+            Gets the values for this leaf node
+            </summary>
+        </member>
+        <member name="P:VelocityDb.Collection.BTree.BTreeLeafBase`2.KeysCount">
+            <summary>
+            Get the number of keys that are in use for this leaf node.
+            </summary>
+        </member>
         <member name="P:VelocityDb.Collection.BTree.BTreeLeafBase`2.FlushIfPageFull">
             <summary>
             We don't want to flush other BTreeLeaf pages while looking for a placement page
             </summary>
+        </member>
+        <member name="M:VelocityDb.Collection.BTree.BTreeLeafBase`2.GetKey(System.Int32)">
+            <summary>
+            Get a key at a given index
+            </summary>
+            <param name="index">index of Key to get</param>
+            <returns>A key</returns>
+        </member>
+        <member name="P:VelocityDb.Collection.BTree.BTreeLeafOidShort`2.Keys">
+            <inheritdoc />
         </member>
         <member name="T:VelocityDb.Collection.BTree.BTreeMap`2">
             <summary>
@@ -1136,6 +1190,13 @@
             </summary>
             <typeparam name="T">The type of object to compare which must implement <see cref="T:System.IComparable"/></typeparam>
         </member>
+        <member name="M:VelocityDb.Collection.Comparer.HashCodeComparer`1.GetHashCode32(System.String)">
+            <summary> 
+            Similar to String.GetHashCode but returns the same as the x86 version of String.GetHashCode for x64 and x86 frameworks. 
+            </summary> 
+            <param name="s"></param> 
+            <returns></returns> 
+        </member>
         <member name="M:VelocityDb.Collection.Comparer.HashCodeComparer`1.Compare(`0,`0)">
             <inheritdoc />
         </member>
@@ -1684,408 +1745,13 @@
             Gets the internal sorted list of objects contained in the set.
             </summary>
         </member>
-        <member name="M:VelocityDb.Collection.Spatial.NodeBase.calculateMinimumBoundingRectangle">
+        <member name="M:VelocityDb.Collection.SortedWeakRefSet.TryGetValue(System.Object,VelocityDb.OptimizedPersistable@)">
             <summary>
-            Given a node object, calculate the node Minimum Bounding Rectangle from it's entries. Used in consistency checking
+            Gets the value associated with the specified key.
             </summary>
-            <returns></returns>  
-        </member>
-        <member name="M:VelocityDb.Collection.Spatial.NodeLeaf.condenseTree(VelocityDb.Collection.Spatial.RTree)">
-            <summary>
-            Used by delete(). Ensures that all nodes from the passed node up to the root have the minimum number of entries.
-            Note that the parent and parentEntry stacks are expected to contain the nodeIds of all parents up to the root.
-            </summary>
-            <param name="rTree"></param>
-        </member>
-        <member name="T:VelocityDb.Collection.Spatial.Point">
-            <summary>
-            Points are most often considered within the framework of Euclidean geometry, where they are one of the fundamental objects. Euclid originally defined the point as "that which has no part". In two-dimensional Euclidean space, a point is represented by an ordered pair (x,?y) of numbers, where the first number conventionally represents the horizontal and is often denoted by x, and the second number conventionally represents the vertical and is often denoted by y.
-            </summary>
-        </member>
-        <member name="F:VelocityDb.Collection.Spatial.Point.x">
-            <summary>
-            The (x, y) coordinates of the point.
-            </summary>
-        </member>
-        <member name="F:VelocityDb.Collection.Spatial.Point.y">
-            <summary>
-            The (x, y) coordinates of the point.
-            </summary>
-        </member>
-        <member name="M:VelocityDb.Collection.Spatial.Point.#ctor(System.Double,System.Double)">
-            <summary>
-            Creates a Point instance
-            </summary>
-            <param name="x">The x coordinate of the point</param>
-            <param name="y">The y coordinate of the point</param>   
-        </member>
-        <member name="M:VelocityDb.Collection.Spatial.Point.ToString">
-            <summary>
-            return "(" + x + ", " + y + ")";
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="T:VelocityDb.Collection.Spatial.PriorityQueue`2">
-            <summary>
-            Priority Queue that stores values and priorities.
-            </summary>
-        </member>
-        <member name="M:VelocityDb.Collection.Spatial.PriorityQueue`2.#ctor(System.Boolean,System.Int32)">
-            <summary>
-            Creates a PriorityQue
-            </summary>
-            <param name="sortOrderAscending">order ascending if true otherwise order descending</param>
-            <param name="initialCapacity">improve performance by setting expected size initially</param>
-        </member>
-        <member name="M:VelocityDb.Collection.Spatial.PriorityQueue`2.sortsEarlierThan(`0,`0)">
-            <summary>
-            Determine if p1 should be ordered before p2 or vice versa
-            </summary>
-            <param name="p1"></param>
-            <param name="p2"></param>
-            <returns>true if p1 has an earlier sort order than p2</returns> 
-        </member>
-        <member name="M:VelocityDb.Collection.Spatial.PriorityQueue`2.Insert(`1,`0)">
-            <summary>
-            Insert a value, append it to the arrays, then reheapify by promoting it to the correct place.
-            </summary>
-            <param name="value">the value inserted</param>
-            <param name="priority">the priority of the value inserted</param>
-        </member>
-        <member name="P:VelocityDb.Collection.Spatial.PriorityQueue`2.Count">
-            <summary>
-            The number of values and priorities that are in the que
-            </summary>
-        </member>
-        <member name="M:VelocityDb.Collection.Spatial.PriorityQueue`2.Clear">
-            <summary>
-            Removes all values and priorities from the que
-            </summary>
-        </member>
-        <member name="P:VelocityDb.Collection.Spatial.PriorityQueue`2.ValuePeek">
-            <summary>
-            Peek at the next value
-            </summary>
-        </member>
-        <member name="P:VelocityDb.Collection.Spatial.PriorityQueue`2.PriorityPeek">
-            <summary>
-            Peek at the next Priority
-            </summary>
-        </member>
-        <member name="M:VelocityDb.Collection.Spatial.PriorityQueue`2.Pop">
-            <summary>
-            Get the value with the lowest priority creates a "hole" at the root of the tree. The algorithm swaps the hole with the appropriate child, until 
-            the last entry will fit correctly into the hole (ie is lower priority than its children)
-            </summary>
-            <returns>the Value with the lowest priority</returns>
-        </member>
-        <member name="P:VelocityDb.Collection.Spatial.PriorityQueue`2.SortOrderAscending">
-            <summary>
-            Set or get sorting order, ascending if true or descending if false. 
-            </summary>
-        </member>
-        <member name="T:VelocityDb.Collection.Spatial.PriorityQueueRTree">
-            <summary>
-            RTree uses double for priorities and Rectangle as values
-            </summary>
-        </member>
-        <member name="T:VelocityDb.Collection.Spatial.Rectangle">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="P:VelocityDb.Collection.Spatial.Rectangle.MinX">
-            <summary>
-            The low x coordinate
-            </summary>
-        </member>
-        <member name="P:VelocityDb.Collection.Spatial.Rectangle.MaxX">
-            <summary>
-            The high x coordinate
-            </summary>
-        </member>
-        <member name="P:VelocityDb.Collection.Spatial.Rectangle.MinY">
-            <summary>
-            The low y coordinate
-            </summary>
-        </member>
-        <member name="P:VelocityDb.Collection.Spatial.Rectangle.MaxY">
-            <summary>
-            The high y coordinate
-            </summary>
-        </member>
-        <member name="M:VelocityDb.Collection.Spatial.Rectangle.#ctor(System.Double,System.Double,System.Double,System.Double)">
-            <summary>
-            
-            </summary>
-            <param name="x1">coordinate of any corner of the rectangle</param>
-            <param name="y1">(see x1)</param>
-            <param name="x2">coordinate of the opposite corner</param>
-            <param name="y2">(see x2)</param>
-        </member>
-        <member name="M:VelocityDb.Collection.Spatial.Rectangle.set(VelocityDb.Collection.Spatial.Rectangle)">
-            <summary>
-            Sets the size of this rectangle to equal the passed rectangle.
-            </summary>
-            <param name="r"></param>  
-        </member>
-        <member name="M:VelocityDb.Collection.Spatial.Rectangle.edgeOverlaps(VelocityDb.Collection.Spatial.Rectangle)">
-            <summary>
-            Determine whether an edge of this rectangle overlies the equivalent edge of the passed rectangle
-            </summary>
-            <param name="r"></param>
-            <returns></returns>
-        </member>
-        <member name="M:VelocityDb.Collection.Spatial.Rectangle.Intersects(System.Nullable{VelocityDb.Collection.Spatial.Rectangle}@)">
-            <summary>
-            Determine whether this rectangle intersects the passed rectangle
-            </summary>
-            <param name="r">The rectangle that might intersect this rectangle</param>
-            <returns>return true if the rectangles intersect, false if they do not intersect</returns>
-        </member>
-        <member name="M:VelocityDb.Collection.Spatial.Rectangle.Contains(VelocityDb.Collection.Spatial.Rectangle)">
-            <summary>
-            Determine whether this rectangle contains the passed rectangle
-            </summary>
-            <param name="r">The rectangle that might be contained by this rectangle</param>
-            <returns>return true if this rectangle contains the passed rectangle, false if it does not</returns>
-        </member>
-        <member name="M:VelocityDb.Collection.Spatial.Rectangle.containedBy(VelocityDb.Collection.Spatial.Rectangle)">
-            <summary>
-            Determine whether this rectangle is contained by the passed rectangle
-            </summary>
-            <param name="r">The rectangle that might contain this rectangle</param>
-            <returns>return true if the passed rectangle contains this rectangle, false if it does not</returns> 
-        </member>
-        <member name="M:VelocityDb.Collection.Spatial.Rectangle.Distance(VelocityDb.Collection.Spatial.Point)">
-            <summary>
-            Return the distance between this rectangle and the passed point. If the rectangle contains the point, the distance is zero.
-            </summary>
-            <param name="p">Point to find the distance to</param>
-            <returns>return distance beween this rectangle and the passed point.</returns>
-        </member>
-        <member name="M:VelocityDb.Collection.Spatial.Rectangle.distance(System.Double,System.Double)">
-            <summary>
-            Return the distance between a rectangle and a point. If the rectangle contains the point, the distance is zero.
-            </summary>
-            <param name="pX">X coordinate of point</param>
-            <param name="pY">Y coordinate of point</param>
-            <returns>return distance beween this rectangle and the passed point.</returns>  
-        </member>
-        <member name="M:VelocityDb.Collection.Spatial.Rectangle.distanceSq(System.Double,System.Double)">
-            <summary>
-            Get the square of the distance between two points.
-            </summary>
-            <param name="pX">the x coordinate of point</param>
-            <param name="pY">the y coordinate of point</param>
-            <returns>the square of the distance between two points.</returns>
-        </member>
-        <member name="M:VelocityDb.Collection.Spatial.Rectangle.Distance(VelocityDb.Collection.Spatial.Rectangle)">
-            <summary>
-            Return the distance between this rectangle and the passed rectangle. If the rectangles overlap, the distance is zero.
-            </summary>
-            <param name="r">Rectangle to find the distance to</param>
-            <returns>return distance between this rectangle and the passed rectangle</returns>
-        </member>
-        <member name="M:VelocityDb.Collection.Spatial.Rectangle.Enlargement(VelocityDb.Collection.Spatial.Rectangle@)">
-            <summary>
-            Calculate the area by which this rectangle would be enlarged if added to the passed rectangle. Neither rectangle is altered.
-            </summary>
-            <param name="r">Rectangle to union with this rectangle, in order to compute the difference in area of the union and the original rectangle</param>
-            <returns>enlargement</returns> 
-        </member>
-        <member name="M:VelocityDb.Collection.Spatial.Rectangle.enlargement(VelocityDb.Collection.Spatial.Rectangle,VelocityDb.Collection.Spatial.Rectangle)">
-            <summary>
-            Calculate the area by which a rectangle would be enlarged if added to the passed rectangle
-            </summary>
-            <param name="r1">minimum X coordinate of rectangle 1</param>
-            <param name="r2">minimum X coordinate of rectangle 2</param>
-            <returns>return enlargement</returns> 
-        </member>
-        <member name="P:VelocityDb.Collection.Spatial.Rectangle.Area">
-            <summary>
-            Compute the area of this rectangle.
-            </summary>
-            <returns>The area of this rectangle</returns>  
-        </member>
-        <member name="M:VelocityDb.Collection.Spatial.Rectangle.Add(VelocityDb.Collection.Spatial.Rectangle)">
-            <summary>
-            Computes the union of this rectangle and the passed rectangle, storing the result in this rectangle.
-            </summary>
-            <param name="r">Rectangle to add to this rectangle</param> 
-        </member>
-        <member name="M:VelocityDb.Collection.Spatial.Rectangle.add(VelocityDb.Collection.Spatial.Point)">
-            <summary>
-            Computes the union of this rectangle and the passed point, storing the result in this rectangle.
-            </summary>
-            <param name="p">Point to add to this rectangle</param>  
-        </member>
-        <member name="M:VelocityDb.Collection.Spatial.Rectangle.union(VelocityDb.Collection.Spatial.Rectangle)">
-            <summary>
-            Find the the union of this rectangle and the passed rectangle.Neither rectangle is altered
-            </summary>
-            <param name="r">The rectangle to union with this rectangle</param>
-            <returns></returns>
-        </member>
-        <member name="M:VelocityDb.Collection.Spatial.Rectangle.GetHashCode">
-            <summary>
-            Customized hash code using the coordinates of the rectangle 37 * minX * minY * maxX * maxY
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:VelocityDb.Collection.Spatial.Rectangle.sameObject(System.Object)">
-            <summary>
-            Determine whether this rectangle is the same as another object. Note that two rectangles can be equal but not the same object, if they both have the same bounds.
-            </summary>
-            <param name="o">The object to compare with this rectangle</param>
-            <returns></returns>   
-        </member>
-        <member name="M:VelocityDb.Collection.Spatial.Rectangle.ToString">
-            <summary>
-            Return a string representation of this rectangle, in the form: (1.2, 3.4), (5.6, 7.8)
-            </summary>
-            <returns>return String String representation of this rectangle</returns>   
-        </member>
-        <member name="P:VelocityDb.Collection.Spatial.Rectangle.Width">
-            <summary>
-            The width of a rectangle
-            </summary>
-        </member>
-        <member name="P:VelocityDb.Collection.Spatial.Rectangle.Height">
-            <summary>
-            The height of a rectangle
-            </summary>
-        </member>
-        <member name="P:VelocityDb.Collection.Spatial.Rectangle.AspectRatio">
-            <summary>
-            The aspect ratio denotes the ratio of length to width of the rectangle (Width / Height)
-            </summary>
-        </member>
-        <member name="P:VelocityDb.Collection.Spatial.Rectangle.Centre">
-            <summary>
-            Gets the centre of the rectangle
-            </summary>
-        </member>
-        <member name="T:VelocityDb.Collection.Spatial.RTree">
-            <summary>
-            RTree implementation inspired by description on Wikipedia http://en.wikipedia.org/wiki/R-tree
-            </summary>
-        </member>
-        <member name="F:VelocityDb.Collection.Spatial.RTree.defaultMinNodeEntries">
-            <summary>
-            default minimum number of reactangles in a leaf RTree node
-            </summary>
-        </member>
-        <member name="F:VelocityDb.Collection.Spatial.RTree.defaultMaxNodeEntries">
-            <summary>
-            default maximum number of reactangles in a leaf RTree node
-            </summary>
-        </member>
-        <member name="M:VelocityDb.Collection.Spatial.RTree.#ctor(System.Int32,System.Int32)">
-            <summary>
-            RTree implementaion customized for optimal performance with VelocityDB. Follows outline as described in http://en.wikipedia.org/wiki/R-tree
-            </summary>
-            <param name="minNodeEntries">Minimum number of entries in a node. The default value is 80.</param>
-            <param name="maxNodeEntries">Maximum number of entries in a node. The default value is 200.</param>
-        </member>
-        <member name="M:VelocityDb.Collection.Spatial.RTree.Add(VelocityDb.Collection.Spatial.Rectangle)">
-            <summary>
-            Start at the Root Node
-            Select the child that needs the least enlargement in order to fit the new geometry.
-            Repeat until at a leaf node.
-            If leaf node has available space insert Else split the entry into two nodes
-            Update parent nodes
-            Update the entry that pointed to the node with a new minimum bounding rectangle
-            Add a new entry for the second new node
-            If there is no space in the parent node, split and repeat
-            </summary>
-            <param name="r">the rectangle being added</param>
-        </member>
-        <member name="M:VelocityDb.Collection.Spatial.RTree.AddInternal(VelocityDb.Collection.Spatial.Rectangle)">
-            <summary>
-            Adds a new entry at a specified level in the tree
-            </summary>
-            <param name="r">the rectangle added</param>
-        </member>
-        <member name="M:VelocityDb.Collection.Spatial.RTree.AddInternal(VelocityDb.Collection.Spatial.Rectangle,System.Int32,VelocityDb.Collection.Spatial.NodeBase)">
-            <summary>
-            Adds a new entry at a specified level in the tree
-            </summary>
-            <param name="r">the rectangle added</param>
-            <param name="level">the level of the tree to add it at</param>
-        </member>
-        <member name="M:VelocityDb.Collection.Spatial.RTree.Remove(VelocityDb.Collection.Spatial.Rectangle)">
-            <summary>
-            Removes a rectangle from the Rtree
-            </summary>
-            <param name="r">the rectangle to delete</param>
-            <returns>true if rectangle deleted otherwise false</returns>
-        </member>
-        <member name="M:VelocityDb.Collection.Spatial.RTree.Nearest(VelocityDb.Collection.Spatial.Point,System.Double)">
-            <summary>
-            Finds the nearest rectangles to the passed point. If multiple rectangles are equally near, they will all be returned.
-            </summary>
-            <param name="p">the point we are looking for</param>
-            <param name="furthestDistance">The furthest distance away from the rectangle to search. Rectangles further than this will not be found.</param>
-            <returns>a PriorityQue containing the found recatngles and their priorities (distances from point)</returns>
-        </member>
-        <member name="M:VelocityDb.Collection.Spatial.RTree.NearestN(VelocityDb.Collection.Spatial.Point,System.UInt32,System.Double)">
-            <summary>
-            Finds the N nearest rectangles to the passed point. If multiple rectangles are equally near, they will all (but total limited to N) be returned.
-            </summary>
-            <param name="p">the point we are looking for</param>
-            <param name="count">max number of rectangles to look for</param>
-            <param name="furthestDistance">The furthest distance away from the rectangle to search. Rectangles further than this will not be found.</param>
-            <returns>a PriorityQue containing the found recatngles and their priorities (distances from point)</returns>
-        </member>
-        <member name="M:VelocityDb.Collection.Spatial.RTree.Intersects(VelocityDb.Collection.Spatial.Rectangle,System.Func{VelocityDb.Collection.Spatial.Rectangle,System.Boolean})">
-            <summary>
-            Finds all rectangles that intersect the passed rectangle.
-            </summary>
-            <param name="r">the rectangle we are intersecting with</param>
-            <param name="v">if returns true, search containues else search is ended</param>
-            <returns>true if at least one intersection was found and v returns true</returns>
-        </member>
-        <member name="M:VelocityDb.Collection.Spatial.RTree.Contains(VelocityDb.Collection.Spatial.Rectangle,System.Func{VelocityDb.Collection.Spatial.Rectangle,System.Boolean})">
-            <summary>
-            Finds all rectangles contained by the passed rectangle
-            </summary>
-            <param name="r">The rectangle for which this method finds contained rectangles.</param>
-            <param name="v">if return true, continue seach</param>
-        </member>
-        <member name="P:VelocityDb.Collection.Spatial.RTree.Count">
-            <summary>
-            Get the number of rectangles that are managed by the Rtree
-            </summary>
-        </member>
-        <member name="P:VelocityDb.Collection.Spatial.RTree.Bounds">
-            <summary>
-            Gets the bounds of all the entries in the spatial index, or null if there are no entries.
-            </summary>
-        </member>
-        <member name="M:VelocityDb.Collection.Spatial.RTree.intersects(VelocityDb.Collection.Spatial.Rectangle,System.Func{VelocityDb.Collection.Spatial.Rectangle,System.Boolean},VelocityDb.Collection.Spatial.NodeBase)">
-            <summary>
-            Recursively searches the tree for all intersecting entries.
-            Calls the passed function when a matching entry is found. Return if the passed function returns false;
-            </summary>
-            <param name="r"></param>
-            <param name="v"></param>
-            <param name="n"></param>
-            <returns></returns>
-        </member>
-        <member name="M:VelocityDb.Collection.Spatial.RTree.chooseNode(VelocityDb.Collection.Spatial.Rectangle,System.Int32)">
-            <summary>
-            Used by add(). Chooses a leaf to add the rectangle to.
-            </summary>
-            <param name="r"></param>
-            <param name="level"></param>
-            <returns></returns> 
-        </member>
-        <member name="M:VelocityDb.Collection.Spatial.RTree.checkConsistency">
-            <summary>
-            Check the consistency of the tree.
-            </summary>
-            <returns>false if an inconsistency is detected, true otherwise</returns> 
+            <param name="key">The key of the value to get.</param>
+            <param name="value">When this method returns, contains the value associated with the specified key, if the key is found; otherwise, the default value for the type of the value parameter. This parameter is passed uninitialized.</param>
+            <returns><c>true</c> if this contains an element with the specified key; otherwise, <c>false</c>.</returns>
         </member>
         <member name="T:VelocityDb.Collection.VelocityDbHashSet`1">
             <summary>
@@ -2863,6 +2529,15 @@
             <param name="other">Other <see cref="T:VelocityDb.Database"/> object</param>
             <returns><c>true</c> if matching; otherwise <c>false</c></returns>
         </member>
+        <member name="M:VelocityDb.Database.Equals(VelocityDb.Database,VelocityDb.Database)">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Database.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Database.GetHashCode(VelocityDb.Database)">
+            <inheritdoc />
+        </member>
         <member name="P:VelocityDb.Database.FileInfo">
             <summary>
             <see cref="T:System.IO.FileInfo"/> for this <see cref="T:VelocityDb.Database"/>, not set for ServerClientSession
@@ -2904,6 +2579,9 @@
             <summary>
              Indicates if database was created in the current transactionNumber 
             </summary>
+        </member>
+        <member name="P:VelocityDb.Database.IsUpdated">
+            <inheritdoc />
         </member>
         <member name="P:VelocityDb.Database.Name">
             <summary>
@@ -3163,6 +2841,13 @@
             Info about a data Field of a persistent object
             </summary>
         </member>
+        <member name="M:VelocityDb.TypeInfo.DataMember.Equals(VelocityDb.TypeInfo.DataMember)">
+            <summary>
+            Determines whether two <see cref="T:VelocityDb.TypeInfo.DataMember"/> instances are equal.
+            </summary>
+            <param name="other">The object to compare with the current object.</param>
+            <returns><c>true</c> if the specified <see cref="T:VelocityDb.TypeInfo.DataMember"/> is equal to the current <see cref="T:VelocityDb.TypeInfo.DataMember"/>; otherwise, <c>false</c>.</returns>
+        </member>
         <member name="M:VelocityDb.TypeInfo.DataMember.GetMemberValue(System.Object)">
             <summary>
             Gets the value of a member within a specified object
@@ -3257,6 +2942,16 @@
             <param name="offset"></param>
             <returns></returns>
         </member>
+        <member name="P:VelocityDb.TypeInfo.DataMember.IsGuid">
+            <summary>
+            <c>true</c> if field is of type <see cref="T:System.Guid"/>
+            </summary>
+        </member>
+        <member name="P:VelocityDb.TypeInfo.DataMember.IsInterface">
+            <summary>
+            <c>true</c> if field is if type interface
+            </summary>
+        </member>
         <member name="M:VelocityDb.TypeInfo.DataMember.StringToType(System.String,VelocityDb.Session.SessionBase,System.Boolean@)">
             <summary>
             Used by code generator.
@@ -3310,6 +3005,13 @@
             Do cache CacheEnum.Yes
             </summary>
         </member>
+        <member name="M:VelocityDb.TypeInfo.Schema.IsInternalType(System.UInt16)">
+            <summary>
+            Determine if a given slot is within the range of slots containing the build in/pre registered types
+            </summary>
+            <param name="slotNumber">Slot number to check</param>
+            <returns><c>true</c> if slot is within the range of build in types; otherwise <c>false</c></returns>
+        </member>
         <member name="M:VelocityDb.TypeInfo.Schema.GetTypeVersion(System.UInt32,VelocityDb.Session.SessionBase,System.Boolean)">
             <summary>
             Opens a <see cref="T:VelocityDb.TypeInfo.TypeVersion"/> object
@@ -3333,6 +3035,31 @@
             Contains info about a version of a <see cref="P:VelocityDb.TypeInfo.TypeVersion.VelocityDbType"/>. The info is used when reading/writing an object of the 
             </summary>
         </member>
+        <member name="P:VelocityDb.TypeInfo.TypeVersion.AllowOtherTypesOnSamePage">
+            <inheritdoc />
+        </member>
+        <member name="P:VelocityDb.TypeInfo.TypeVersion.BaseShape">
+            <summary>
+            Get the base <see cref="T:VelocityDb.TypeInfo.TypeVersion"/> or null if none exist
+            </summary>
+        </member>
+        <member name="P:VelocityDb.TypeInfo.TypeVersion.Cache">
+            <inheritdoc />
+        </member>
+        <member name="P:VelocityDb.TypeInfo.TypeVersion.CountStart">
+            <summary>
+            Set where <see cref="P:VelocityDb.TypeInfo.TypeVersion.AutoIncrement"/> counter should start
+            </summary>
+        </member>
+        <member name="M:VelocityDb.TypeInfo.TypeVersion.Equals(VelocityDb.TypeInfo.TypeVersion)">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.TypeInfo.TypeVersion.GetDataMemberList">
+            <summary>
+            Get a list of all <see cref="T:VelocityDb.TypeInfo.DataMember"/> of this type including base classes.
+            </summary>
+            <returns>A list of <see cref="T:VelocityDb.TypeInfo.DataMember"/> that this type or a base class contains</returns>
+        </member>
         <member name="M:VelocityDb.TypeInfo.TypeVersion.LoadMembers(VelocityDb.IOptimizedPersistable,VelocityDb.TypeInfo.Schema,System.Collections.Generic.List{VelocityDb.IOptimizedPersistable},System.Int32,System.Int32,VelocityDb.Session.SessionBase,System.Boolean)">
             <summary>
             Loads member fields from persistent storage
@@ -3344,6 +3071,15 @@
             <param name="graphDepthToLoad">Max graph depth to load fields for</param>
             <param name="session">The active session</param>
             <param name="primitivesOnly">If true, load only primitive values</param>
+        </member>
+        <member name="M:VelocityDb.TypeInfo.TypeVersion.ObjectBytesFromStrings(System.String[],System.String[],VelocityDb.Session.SessionBase,VelocityDb.TypeInfo.Schema)">
+            <summary>
+            Converts string representation of an object into VelocityDB object byte representation.
+            </summary>
+            <param name="members"></param>
+            <param name="fieldNames"></param>
+            <param name="session">Active session</param>
+            <param name="schema">Current schema</param>
         </member>
         <member name="P:VelocityDb.TypeInfo.TypeVersion.DataMemberArray">
             <summary>
@@ -3438,6 +3174,9 @@
             <summary>
             Contains persistent info for a <see cref="P:VelocityDb.TypeInfo.VelocityDbType.Type"/>
             </summary>
+        </member>
+        <member name="M:VelocityDb.TypeInfo.VelocityDbType.ReadMe(VelocityDb.TypeInfo.TypeVersion,System.Byte[],System.Int32@,VelocityDb.Session.SessionBase,VelocityDb.Page,System.Boolean,VelocityDb.TypeInfo.Schema,System.Boolean,System.Collections.Generic.List{VelocityDb.IOptimizedPersistable},System.Int32,System.Int32,System.Boolean)">
+            <inheritdoc />
         </member>
         <member name="P:VelocityDb.TypeInfo.VelocityDbType.AllowOtherTypesOnSamePage">
             <inheritdoc />
@@ -3812,6 +3551,11 @@
             Cache of typeof(List{})
             </summary>
         </member>
+        <member name="F:VelocityDb.TypeInfo.CommonTypes.s_typeOfArrayList">
+            <summary>
+            Cache of typeof(ArrayList)
+            </summary>
+        </member>
         <member name="F:VelocityDb.TypeInfo.CommonTypes.s_typeOfSchema">
             <summary>
             Cache of typeof(Schema)
@@ -3841,21 +3585,6 @@
             <summary>
             Cache of typeof(WeakIOptimizedPersistableReference)
             </summary>
-        </member>
-        <member name="F:VelocityDb.TypeInfo.CommonTypes.s_typeOfObjectActivator">
-            <summary>
-            Cache of typeof(ObjectActivator)
-            </summary>
-        </member>
-        <member name="F:VelocityDb.TypeInfo.CommonTypes.s_typeOfGetHandler">
-            <summary>
-            Cache of typeof(Func{object, object});
-            </summary> 
-        </member>
-        <member name="F:VelocityDb.TypeInfo.CommonTypes.s_typeOfSetHandler">
-            <summary>
-            Cache of typeof(Action{object, object});
-            </summary> 
         </member>
         <member name="F:VelocityDb.TypeInfo.CommonTypes.s_typeOfFunc">
             <summary>
@@ -4257,12 +3986,6 @@
         <member name="T:VelocityDb.DataCache">
             <summary>
             Object maintains a list of pages accessed by a session, pages are removed from the list when there is not enough memory available. This makes such pages eligible for garbage collection while in list pages are prevented from being garbage collected.
-            </summary>
-        </member>
-        <member name="P:VelocityDb.DataCache.UnauthorizedPerformanceCounter">
-            <summary>
-            Web server process isn't by default permitted to use PerformanceCounter
-            See: http://blogs.msdn.com/b/bclteam/archive/2006/09/08/746900.aspx
             </summary>
         </member>
         <member name="P:VelocityDb.DataCache.MaximumMemoryUse">
@@ -4841,6 +4564,7 @@
             <summary>
             Constructs this enumeration wrapper object
             </summary>
+            <param name="type">The <see cref="T:System.Type"/> to look for.</param>
             <param name="db">The active db</param>
             <param name="includeSubClasses">Also return instances of sub classes</param>
         </member>
@@ -4862,6 +4586,7 @@
             <param name="index">the item index</param>
             <param name="allObjects">object of type collection</param>
             <param name="atIndex">index reached within this database</param>
+            <param name="reset"></param>
             <returns>the item at the specified index</returns>
         </member>
         <member name="T:VelocityDb.OfTypeExtension">
@@ -5206,8 +4931,9 @@
         </member>
         <member name="M:VelocityDb.OptimizedPersistable.Equals(System.Object)">
             <summary>
-            Determines whether the specified Object is equal to the current Object.
+            Determines whether the specified Object is equal to the current Object. If this object or other object isn't persistent we call <see cref="M:System.Object.Equals(System.Object)"/>
             </summary>
+            <param name="obj">Object to compare with</param>
             <value>true if the specified Object is equal to the current Object; otherwise, false.</value>
         </member>
         <member name="P:VelocityDb.OptimizedPersistable.DatabaseNumber">
@@ -5576,6 +5302,9 @@
             <param name="str">a string to convert</param>
             <returns>a UTF8 encoding</returns>
         </member>
+        <member name="M:VelocityDb.Page.Dispose">
+            <inheritdoc />
+        </member>
         <member name="M:VelocityDb.Page.CompareTo(VelocityDb.Page)">
             <summary>
             Compares Pages by PageNumber
@@ -5816,8 +5545,8 @@
         <member name="T:VelocityDb.Session.SessionBase">
             <summary>
             Transaction control, database creation and special persistent object api.
-            Each session can use 4,294,967,295 <see cref="T:VelocityDb.Database"/>s. Each <see cref="T:VelocityDb.Database"/> may have up to 65,535 <see cref="T:VelocityDb.Page"/>s and a page can be up to 4,294,967,295 bytes in size.
-            The maximum data size a single session can manage is: 4,294,967,295 * 65,535 * 4,294,967,295 = 1208907372307614101733375 bytes or about a Yottabyte http://en.wikipedia.org/wiki/Yottabyte
+            Each session can use 4,294,967,295 <see cref="T:VelocityDb.Database"/>s. Each <see cref="T:VelocityDb.Database"/> may have up to 65,535 <see cref="T:VelocityDb.Page"/>s and a page can be up to 2 GB in size (.Net restriction of a byte array).
+            The maximum data size a single session can manage is: 4,294,967,295 * 65,535 * 2147483648 = 604453686294542391705600 bytes or about half a Yottabyte http://en.wikipedia.org/wiki/Yottabyte
             </summary>
         </member>
         <member name="F:VelocityDb.Session.SessionBase.s_typeDatabaseIdOffsetFromTypeShortId">
@@ -5944,17 +5673,17 @@
         </member>
         <member name="P:VelocityDb.Session.SessionBase.MinStringLengthToIntern">
             <summary>
-            Get the minimum size a string must have before VelocityDB internals interns, <see cref="M:System.String.Intern(System.String)"/>, string when read from a <see cref="T:VelocityDb.Database"/>.
+            Get the minimum size a string must have before VelocityDB internals interns, <see cref="!:string.Intern"/>, string when read from a <see cref="T:VelocityDb.Database"/>.
             </summary>
         </member>
         <member name="P:VelocityDb.Session.SessionBase.MaxStringLengthToIntern">
             <summary>
-            Get the maximum size a string must have before VelocityDB internals interns, <see cref="M:System.String.Intern(System.String)"/>, string when read from a <see cref="T:VelocityDb.Database"/>.
+            Get the maximum size a string must have before VelocityDB internals interns, <see cref="!:string.Intern"/>, string when read from a <see cref="T:VelocityDb.Database"/>.
             </summary>
         </member>
         <member name="M:VelocityDb.Session.SessionBase.SetMinMaxStringIntern(System.UInt16,System.UInt16)">
             <summary>
-            A persistent string read into memory from a <see cref="T:VelocityDb.Database"/> is interned using <see cref="M:System.String.Intern(System.String)"/> to speed up comparisons and conserve memory (when the same string occurs in many places)
+            A persistent string read into memory from a <see cref="T:VelocityDb.Database"/> is interned using <see cref="!:string.Intern"/> to speed up comparisons and conserve memory (when the same string occurs in many places)
             </summary>
             <param name="minSize">Selected minimum plus one string length of a string to be interned</param>
             <param name="maxSize">Selected maximum string length for a string to be interned</param>
@@ -6786,7 +6515,7 @@
             <summary>
             Gets the current database to try
             </summary>
-            <param name="session">the active session</param>
+            <param name="place">the placement object to retrieve from</param>
             <returns>A database or null if not cached</returns>
         </member>
         <member name="P:VelocityDb.Session.SessionBase.UseExternalStorageApi">
@@ -6928,13 +6657,6 @@
             <param name="arg">Internally used parameter (optional)</param>
             <returns>A string representation of a type</returns>
         </member>
-        <member name="T:VelocityDb.Session.ExternalStorageFileWrapper">
-            <summary>
-            Stream wrapper to circumnavigate buggy Stream reading of stream returned by ExternalStorageFile.OpenForReadAsync()
-            http://stackoverflow.com/questions/15752463/issue-with-reading-file-on-windows-phone-8-sd-card/17355068#17355068
-            This calss provided by Gavin Harriss, https://github.com/gavinharriss/ExternalStorageFileWrapper-wp8
-            </summary>
-        </member>
         <member name="T:VelocityDb.Session.SessionNoServer">
             <summary>
             Use this session class when <see cref="T:VelocityDb.Database"/> level locking is acceptable and <see cref="T:VelocityDb.Database"/>s are local or reachable by UNC paths.
@@ -6942,7 +6664,7 @@
         </member>
         <member name="M:VelocityDb.Session.SessionNoServer.#ctor(System.String,System.Int32,System.Boolean,System.Boolean,VelocityDb.CacheEnum)">
             <summary>
-            Creates a new session. For a thread safe version of this class, use <see cref="T:VelocityDb.Session.SessionNoServerShared"/>
+            Creates a new session. For a thread safe version of this class, use <see cref="!:SessionNoServerShared"/>
             </summary>
             <param name="systemDir">The startup location directory path. Path can be an absolute (full) path or a path relative to <see cref="F:VelocityDb.Session.SessionBase.s_baseDatabasePath"/></param>
             <param name="waitForLockMilliseconds">The desired maximum lock wait time</param>
@@ -6969,255 +6691,6 @@
             </summary>
             <param name="db">The database to update</param>
             <returns>true if Database was updated, otherwise throws an exception</returns>
-        </member>
-        <member name="T:VelocityDb.Session.SessionNoServerShared">
-            <summary>
-            Same as SessionNoServer but SessionNoServerShared is thread safe so it can be shared between threads.
-            </summary>
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.#ctor(System.String,System.Int32,System.Boolean,System.Boolean,VelocityDb.CacheEnum)">
-            <inheritdoc />
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.Abort">
-            <inheritdoc />
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.ActualFlushPage(VelocityDb.Page,System.Boolean,System.IO.Stream,System.Collections.Generic.Dictionary{System.UInt16,System.Int64})">
-            <inheritdoc />
-        </member>
-        <member name="P:VelocityDb.Session.SessionNoServerShared.AddToIndexInSeperateThread">
-            <summary>
-            Allow adding objects to indices to be done in a worker thread instead of in main thread.
-            </summary>
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.BeginRead(System.Boolean)">
-            <inheritdoc />
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.BeginUpdate(System.Boolean)">
-            <inheritdoc />
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.CachedPage(VelocityDb.Database,System.UInt16)">
-            <inheritdoc />
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.ClearCache">
-            <inheritdoc />
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.ClearCashedPages">
-            <inheritdoc />
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.ClearPageCache">
-            <inheritdoc />
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.CrossTransactionCache(VelocityDb.Database,System.Boolean)">
-            <inheritdoc />
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.Commit(System.Boolean,System.Boolean)">
-            <inheritdoc />
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.Compact">
-            <inheritdoc />
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.Compact(VelocityDb.Database)">
-            <inheritdoc />
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.CopyAllDatabasesTo(System.String)">
-            <inheritdoc />
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.CopyDatabaseTo(VelocityDb.Database,VelocityDb.Database)">
-            <inheritdoc />
-        </member>
-        <member name="P:VelocityDb.Session.SessionNoServerShared.Databases">
-            <inheritdoc />
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.DeleteDatabase(VelocityDb.Database,System.Collections.Generic.SortedSet{VelocityDb.Database})">
-            <inheritdoc />
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.DeleteLocation(VelocityDb.DatabaseLocation,System.Boolean)">
-            <inheritdoc />
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.DeletePage(VelocityDb.Database,VelocityDb.Page,System.Collections.Generic.Dictionary{System.UInt16,System.Int64},System.Boolean)">
-            <inheritdoc />
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.deleteFromIndexes(VelocityDb.IOptimizedPersistable,VelocityDb.TypeInfo.TypeVersion,VelocityDb.TypeInfo.TypeVersion)">
-            <inheritdoc />
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.ExclusiveLockDatabase(System.UInt32)">
-            <inheritdoc />
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.licenseCheck">
-            <inheritdoc />
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.LoadMembers(VelocityDb.IOptimizedPersistable,VelocityDb.TypeInfo.Schema,VelocityDb.Page,System.UInt16,System.Int32,System.Byte[],System.Collections.Generic.List{VelocityDb.IOptimizedPersistable},System.Int32,System.Int32,VelocityDb.TypeInfo.TypeVersion,System.Boolean)">
-            <inheritdoc />
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.FileOpen(VelocityDb.Database,System.IO.FileAccess,System.String@,System.IO.FileMode,System.Boolean,System.Int32,System.Boolean)">
-            <inheritdoc />
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.FlushPage(VelocityDb.Page,System.Collections.Generic.Dictionary{System.UInt16,System.Int64},VelocityDb.Internal.DatabaseUpdatedPages,System.Boolean)">
-            <inheritdoc />
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.FlushPageOf(VelocityDb.OptimizedPersistable)">
-            <inheritdoc />
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.FlushUpdates">
-            <inheritdoc />
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.FlushUpdates(System.Boolean)">
-            <inheritdoc />
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.FlushUpdates(VelocityDb.Database,VelocityDb.Internal.DatabaseUpdatedPages,System.Boolean@,System.Boolean)">
-            <inheritdoc />
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.ForceDatabaseCacheValidation">
-            <inheritdoc />
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.GlobalObjWrapperGet(System.Object,VelocityDb.IOptimizedPersistable@)">
-            <inheritdoc />
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.GlobalObjWrapperAdd(System.Object,VelocityDb.IOptimizedPersistable)">
-            <inheritdoc />
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.getLocalPage(VelocityDb.Database,System.Collections.Generic.Dictionary{System.UInt16,System.Int64},System.UInt16,System.Boolean,System.Boolean,System.Boolean,System.Boolean)">
-            <inheritdoc />
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.getLocalNextPage(VelocityDb.Placement,System.UInt16,System.UInt32,System.Boolean,System.Boolean,System.Boolean)">
-            <inheritdoc />
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.GetNextPage(System.UInt32@,System.UInt16@,System.Boolean,System.Int32,System.Boolean,System.Boolean,System.Boolean)">
-            <inheritdoc />
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.getPage(VelocityDb.Database,System.Collections.Generic.Dictionary{System.UInt16,System.Int64},System.UInt16,System.Boolean,System.Boolean,System.Boolean)">
-            <inheritdoc />
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.ReOpenDatabaseLocations">
-            <inheritdoc />
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.RestoreFrom(VelocityDb.DatabaseLocation,System.DateTime)">
-            <inheritdoc />
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.optimisticLockingValidate(VelocityDb.Database,VelocityDb.TypeInfo.Schema,System.Int32)">
-            <inheritdoc />
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.OpenDatabase(System.UInt32,System.Boolean,System.Boolean)">
-            <inheritdoc />
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.openLocalDatabase(System.UInt32,System.Boolean,VelocityDb.TypeInfo.Schema,System.Boolean,VelocityDb.DatabaseLocations,System.Boolean@,System.Int32)">
-            <inheritdoc />
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.OpenAllDatabases(System.Boolean)">
-            <inheritdoc />
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.OpenLocationDatabases(VelocityDb.DatabaseLocation,System.Boolean)">
-            <inheritdoc />
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.OpenDatabase(System.UInt32,System.Boolean,VelocityDb.TypeInfo.Schema,System.Boolean,System.Boolean@,System.Int32)">
-            <inheritdoc />
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.Persist(VelocityDb.Placement,VelocityDb.IOptimizedPersistable,VelocityDb.TypeInfo.Schema,System.UInt16,System.Boolean,System.Collections.Generic.Queue{VelocityDb.IOptimizedPersistable})">
-            <inheritdoc />
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.Persist(VelocityDb.IOptimizedPersistable,System.Nullable{System.UInt16})">
-            <inheritdoc />
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.PossiblyFlushUpdatedPages(System.UInt32)">
-            <inheritdoc />
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.SubscribeToChanges(System.Type,System.String)">
-            <inheritdoc />
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.UpdateDatabase(VelocityDb.Database)">
-            <inheritdoc />
-        </member>
-        <member name="P:VelocityDb.Session.SessionNoServerShared.WriteToDiskInSeperateDatabaseThreads">
-            <summary>
-            Allow object serialization and page writes to happen in worker threads, one per database, instead of in main session thread.
-            <see cref="P:VelocityDb.Session.SessionNoServerShared.AddToIndexInSeperateThread"/> must also be enabled for this to work.
-            </summary>
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.Unpersist(System.Object)">
-            <inheritdoc />
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.Unstubify(VelocityDb.Page,System.Boolean)">
-            <inheritdoc />
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.UpdateObject(VelocityDb.IOptimizedPersistable,System.Boolean,System.Boolean)">
-            <inheritdoc />
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.UpdateObject(System.Object)">
-            <inheritdoc />
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.OpenSchema(System.Boolean)">
-            <inheritdoc />
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.NewDatabase(System.UInt32,System.UInt32,System.String,System.Boolean)">
-            <inheritdoc />
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.NewLocation(VelocityDb.DatabaseLocation)">
-            <inheritdoc />
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.Open(VelocityDb.Database,System.UInt64,System.Boolean,System.Collections.Generic.List{VelocityDb.IOptimizedPersistable},System.Boolean,System.Int32,System.Int32)">
-            <inheritdoc />
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.Open(System.UInt32,System.UInt16,System.UInt16,System.Boolean,System.Int32)">
-            <inheritdoc />
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.Open(System.UInt64,System.Boolean,System.Boolean,System.Int32)">
-            <inheritdoc />
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.Open(VelocityDb.Database,System.UInt64,System.Boolean,System.Collections.Generic.List{VelocityDb.IOptimizedPersistable},System.Boolean,System.Int32,System.Int32,System.Boolean)">
-            <inheritdoc />
-        </member>
-        <member name="M:VelocityDb.Session.SessionNoServerShared.Verify">
-            <inheritdoc />
-        </member>
-        <member name="T:VelocityDb.Session.SessionPool">
-            <summary>
-            Provides a pool of sessions for reuse instead of creating new session instances every time a session is needed.
-            The pooled sessions includes cached databases, pages and objects.
-            Keep the pool size to a minimum too avoid excessive memory usage.
-            </summary>
-        </member>
-        <member name="M:VelocityDb.Session.SessionPool.#ctor(System.Int32,System.Func{VelocityDb.Session.SessionBase})">
-            <summary>
-            Creates a session pool, store this pool somewhere where tour application threads can get to it. 
-            </summary>
-            <param name="poolSize">The maximum number of session maintained in the pool</param>
-            <param name="createSessionFunc">A function provided by you that creates a session of your choice with your choice of parameters. Could be something as simple as: () => new SessionNoServer("MyDbDir")</param>
-        </member>
-        <member name="M:VelocityDb.Session.SessionPool.Dispose">
-            <summary>
-            Disposes all sessions in this pool
-            </summary>
-        </member>
-        <member name="M:VelocityDb.Session.SessionPool.Dispose(System.Boolean)">
-            <summary>
-            Aborts and active sessions and closes any network streams.
-            </summary>
-        </member>
-        <member name="M:VelocityDb.Session.SessionPool.GetSession(System.Int32@)">
-            <summary>
-            Get a session locked for use by caller.
-            </summary>
-            <param name="identifier">The id of the returned session. Make sure you always call FreeSession with this id provided or else session is locked forever. One way is to call FreeSession in a finally block.</param>
-            <returns>A reserved/locked session</returns>
-        </member>
-        <member name="M:VelocityDb.Session.SessionPool.FreeSession(System.Int32,VelocityDb.Session.SessionBase)">
-            <summary>
-            Always call this function so that your session is unlocked and becomes available to others
-            </summary>
-            <param name="identifier">The identifier provided by <see cref="M:VelocityDb.Session.SessionPool.GetSession(System.Int32@)"/></param>
-            <param name="session">The session provided by <see cref="M:VelocityDb.Session.SessionPool.GetSession(System.Int32@)"/></param>
-        </member>
-        <member name="T:VelocityDb.StringLengthAttribute">
-            <summary>
-            Specifies that a data field value must
-            fall within the specified range.
-            </summary>
-        </member>
-        <member name="M:VelocityDb.StringLengthAttribute.#ctor(System.Int32)">
-            <summary>
-            Creates an instance of the attribute.
-            </summary>
-            <param name="stringMaxLength">Maximum string length allowed.</param>
         </member>
         <member name="T:VelocityDb.Sync.Change">
             <summary>
@@ -7255,6 +6728,16 @@
             Version of page being updated
             </summary>
         </member>
+        <member name="T:VelocityDb.Sync.Changes">
+            <summary>
+            Keeps track of changes within a set of databases (a federation). Preliminary version.
+            </summary>
+        </member>
+        <member name="P:VelocityDb.Sync.Changes.ChangeList">
+            <summary>
+            A list of <see cref="T:VelocityDb.Sync.TransactionChanges"/> made to the federation
+            </summary>
+        </member>
         <member name="M:VelocityDb.Sync.Changes.Unpersist(VelocityDb.Session.SessionBase)">
             <inheritdoc />
         </member>
@@ -7290,36 +6773,23 @@
             Last transaction number synced with
             </summary>
         </member>
+        <member name="T:VelocityDb.Sync.TransactionChanges">
+            <summary>
+            A log of all changes made within a certain transaction.
+            </summary>
+        </member>
+        <member name="P:VelocityDb.Sync.TransactionChanges.ChangeList">
+            <summary>
+            List of changes made
+            </summary>
+        </member>
+        <member name="P:VelocityDb.Sync.TransactionChanges.TransactionNumber">
+            <summary>
+            Transaction id for these changes.
+            </summary>
+        </member>
         <member name="M:VelocityDb.Sync.TransactionChanges.Unpersist(VelocityDb.Session.SessionBase)">
             <inheritdoc />
-        </member>
-        <member name="T:VelocityDb.ValidationAttribute">
-            <summary>
-            Base class used to create validation attributes.
-            </summary>
-        </member>
-        <member name="P:VelocityDb.ValidationAttribute.ErrorMessage">
-            <summary>
-            Gets or sets an error message to associated with a validation control if validation fails.
-            </summary>
-        </member>
-        <member name="P:VelocityDb.ValidationAttribute.ErrorMessageResourceName">
-            <summary>
-            Gets or sets the error resource name in order to look up the error message
-            text from a resource if validation fails.
-            </summary>
-        </member>
-        <member name="P:VelocityDb.ValidationAttribute.ErrorMessageResourceType">
-            <summary>
-            Gets or sets the resource type to use for message look-up if validation fails.
-            </summary>
-        </member>
-        <member name="M:VelocityDb.ValidationAttribute.IsValid(System.Object)">
-            <summary>
-            Validates the specified value with respect to
-            the current validation attribute.
-            </summary>
-            <param name="value">Value of the object to validate.</param>
         </member>
         <member name="T:VelocityDb.WeakIOptimizedPersistableReference`1">
             <summary>When a persistent object is opened, all its referenced objects are opened as well. In order to limit the number of opened objects, you need to use this class.
@@ -7415,1642 +6885,112 @@
             Short reference ID of weak reference
             </summary>
         </member>
-        <member name="P:VelocityDB.Server.AbstractMultiThreadedClaimStrategy.BufferSize">
-            <summary>
-            Get the size of the data structure used to buffer events.
-            </summary>
-        </member>
-        <member name="P:VelocityDB.Server.AbstractMultiThreadedClaimStrategy.Sequence">
-            <summary>
-            Get the current claimed sequence.
-            </summary>
-        </member>
-        <member name="M:VelocityDB.Server.AbstractMultiThreadedClaimStrategy.HasAvailableCapacity(System.Int32,VelocityDB.Server.Sequence[])">
-            <summary>
-            Is there available capacity in the buffer for the requested sequence.
-            </summary>
-            <param name="availableCapacity">availableCapacity remaining in the buffer.</param>
-            <param name="dependentSequences">dependentSequences to be checked for range.</param>
-            <returns>true if the buffer has capacity for the requested sequence.</returns>
-        </member>
-        <member name="M:VelocityDB.Server.AbstractMultiThreadedClaimStrategy.IncrementAndGet(VelocityDB.Server.Sequence[])">
-            <summary>
-            Claim the next sequence in the <see cref="T:VelocityDB.Server.Sequencer"/>
-            The caller should be held up until the claimed sequence is available by tracking the dependentSequences.
-            </summary>
-            <param name="dependentSequences">dependentSequences to be checked for range.</param>
-            <returns>the index to be used for the publishing.</returns>
-        </member>
-        <member name="M:VelocityDB.Server.AbstractMultiThreadedClaimStrategy.IncrementAndGet(System.Int32,VelocityDB.Server.Sequence[])">
-            <summary>
-             Increment sequence by a delta and get the result.
-             The caller should be held up until the claimed sequence batch is available by tracking the dependentSequences.
-            </summary>
-            <param name="delta">delta to increment by.</param>
-             <param name="dependentSequences">dependentSequences to be checked for range.</param>
-            <returns>the result after incrementing.</returns>
-        </member>
-        <member name="M:VelocityDB.Server.AbstractMultiThreadedClaimStrategy.SetSequence(System.Int64,VelocityDB.Server.Sequence[])">
-            <summary>
-            Set the current sequence value for claiming an event in the <see cref="T:VelocityDB.Server.Sequencer"/>
-            The caller should be held up until the claimed sequence is available by tracking the dependentSequences.
-            </summary>
-            <param name="sequence">sequence to be set as the current value.</param>
-            <param name="dependentSequences">dependentSequences to be checked for range.</param>
-        </member>
-        <member name="T:VelocityDB.Server.AlertException">
-            <summary>
-            Used to alert <see cref="T:VelocityDB.Server.IEventProcessor"/>s waiting at a <see cref="T:VelocityDB.Server.ISequenceBarrier"/> of status changes.
-            </summary>
-        </member>
-        <member name="F:VelocityDB.Server.AlertException.Instance">
-            <summary>
-            Pre-allocated exception to avoid garbage generation
-            </summary>
-        </member>
-        <member name="M:VelocityDB.Server.AlertException.#ctor">
-            <summary>
-            Private constructor so only a single instance exists.
-            </summary>
-        </member>
-        <member name="T:VelocityDB.Server.BatchDescriptor">
-            <summary>
-            Used to record the batch of sequences claimed in a <see cref="T:VelocityDB.Server.Sequencer"/>.
-            </summary>
-        </member>
-        <member name="M:VelocityDB.Server.BatchDescriptor.#ctor(System.Int32)">
-            <summary>
-             Create a holder for tracking a batch of claimed sequences in a <see cref="T:VelocityDB.Server.Sequencer"/>
-            </summary>
-            <param name="size">size of the batch to claim</param>
-        </member>
-        <member name="P:VelocityDB.Server.BatchDescriptor.Start">
-            <summary>
-            Get the start sequence number of the batch.
-            </summary>
-        </member>
-        <member name="P:VelocityDB.Server.BatchDescriptor.Size">
-            <summary>
-            Get the size of the batch.
-            </summary>
-        </member>
-        <member name="P:VelocityDB.Server.BatchDescriptor.End">
-            <summary>
-             Get the end sequence number of the batch
-            </summary>
-        </member>
-        <member name="T:VelocityDB.Server.BlockingWaitStrategy">
-            <summary>
-            Blocking strategy that uses a lock and condition variable for <see cref="T:VelocityDB.Server.IEventProcessor"/>s waiting on a barrier.
-            
-            This strategy should be used when performance and low-latency are not as important as CPU resource.
-            </summary>
-        </member>
-        <member name="M:VelocityDB.Server.BlockingWaitStrategy.WaitFor(System.Int64,VelocityDB.Server.Sequence,VelocityDB.Server.Sequence[],VelocityDB.Server.ISequenceBarrier)">
-            <summary>
-            Wait for the given sequence to be available
-            </summary>
-            <param name="sequence">sequence to be waited on.</param>
-            <param name="cursor">Ring buffer cursor on which to wait.</param>
-            <param name="dependents">dependents further back the chain that must advance first</param>
-            <param name="barrier">barrier the <see cref="T:VelocityDB.Server.IEventProcessor"/> is waiting on.</param>
-            <returns>the sequence that is available which may be greater than the requested sequence.</returns>
-        </member>
-        <member name="M:VelocityDB.Server.BlockingWaitStrategy.WaitFor(System.Int64,VelocityDB.Server.Sequence,VelocityDB.Server.Sequence[],VelocityDB.Server.ISequenceBarrier,System.TimeSpan)">
-            <summary>
-            Wait for the given sequence to be available with a timeout specified.
-            </summary>
-            <param name="sequence">sequence to be waited on.</param>
-            <param name="cursor">cursor on which to wait.</param>
-            <param name="dependents">dependents further back the chain that must advance first</param>
-            <param name="barrier">barrier the processor is waiting on.</param>
-            <param name="timeout">timeout value to abort after.</param>
-            <returns>the sequence that is available which may be greater than the requested sequence.</returns>
-            <exception cref="T:VelocityDB.Server.AlertException">AlertException if the status of the Disruptor has changed.</exception>
-        </member>
-        <member name="M:VelocityDB.Server.BlockingWaitStrategy.SignalAllWhenBlocking">
-            <summary>
-            Signal those <see cref="T:VelocityDB.Server.IEventProcessor"/> waiting that the cursor has advanced.
-            </summary>
-        </member>
-        <member name="T:VelocityDB.Server.IClaimStrategy">
-            <summary>
-            Strategy contract for claiming the sequence of events in the <see cref="T:VelocityDB.Server.Sequencer"/> by event publishers.
-            </summary>
-        </member>
-        <member name="P:VelocityDB.Server.IClaimStrategy.BufferSize">
-            <summary>
-            Get the size of the data structure used to buffer events.
-            </summary>
-        </member>
-        <member name="P:VelocityDB.Server.IClaimStrategy.Sequence">
-            <summary>
-            Get the current claimed sequence.
-            </summary>
-        </member>
-        <member name="M:VelocityDB.Server.IClaimStrategy.HasAvailableCapacity(System.Int32,VelocityDB.Server.Sequence[])">
-            <summary>
-            Is there available capacity in the buffer for the requested sequence.
-            </summary>
-            <param name="availableCapacity">availableCapacity remaining in the buffer.</param>
-            <param name="dependentSequences">dependentSequences to be checked for range.</param>
-            <returns>true if the buffer has capacity for the requested sequence.</returns>
-        </member>
-        <member name="M:VelocityDB.Server.IClaimStrategy.IncrementAndGet(VelocityDB.Server.Sequence[])">
-            <summary>
-            Claim the next sequence in the <see cref="T:VelocityDB.Server.Sequencer"/>
-            The caller should be held up until the claimed sequence is available by tracking the dependentSequences.
-            </summary>
-            <param name="dependentSequences">dependentSequences to be checked for range.</param>
-            <returns>the index to be used for the publishing.</returns>
-        </member>
-        <member name="M:VelocityDB.Server.IClaimStrategy.IncrementAndGet(System.Int32,VelocityDB.Server.Sequence[])">
-            <summary>
-             Increment sequence by a delta and get the result.
-             The caller should be held up until the claimed sequence batch is available by tracking the dependentSequences.
-            </summary>
-            <param name="delta">delta to increment by.</param>
-             <param name="dependentSequences">dependentSequences to be checked for range.</param>
-            <returns>the result after incrementing.</returns>
-        </member>
-        <member name="M:VelocityDB.Server.IClaimStrategy.SetSequence(System.Int64,VelocityDB.Server.Sequence[])">
-            <summary>
-            Set the current sequence value for claiming an event in the <see cref="T:VelocityDB.Server.Sequencer"/>
-            The caller should be held up until the claimed sequence is available by tracking the dependentSequences.
-            </summary>
-            <param name="sequence">sequence to be set as the current value.</param>
-            <param name="dependentSequences">dependentSequences to be checked for range.</param>
-        </member>
-        <member name="M:VelocityDB.Server.IClaimStrategy.SerialisePublishing(System.Int64,VelocityDB.Server.Sequence,System.Int64)">
-            <summary>
-             Serialise publishers in sequence and set cursor to latest available sequence.
-            </summary>
-            <param name="sequence">sequence to be applied</param>
-            <param name="cursor">cursor to serialise against.</param>
-            <param name="batchSize">batchSize of the sequence.</param>
-        </member>
-        <member name="M:VelocityDB.Server.IClaimStrategy.CheckAndIncrement(System.Int32,System.Int32,VelocityDB.Server.Sequence[])">
-            <summary>
-            Atomically checks the available capacity of the ring buffer and claims the next sequence.  Will
-            throw InsufficientCapacityException if the capacity not available.
-            </summary>
-            <param name="availableCapacity">the capacity that should be available before claiming the next slot</param>
-            <param name="delta">the number of slots to claim</param>
-            <param name="dependentSequences">the set of sequences to check to ensure capacity is available</param>
-            <returns>the slot after incrementing</returns>
-        </member>
-        <member name="T:VelocityDB.Server.IEventProcessor">
-            <summary>
-            <see cref="T:VelocityDB.Server.IEventProcessor"/> waitFor events to become available for consumption from the <see cref="T:VelocityDB.Server.RingBuffer`1"/>
-            </summary>
-        </member>
-        <member name="P:VelocityDB.Server.IEventProcessor.Sequence">
-            <summary>
-            Return a reference to the <see cref="P:VelocityDB.Server.IEventProcessor.Sequence"/> being used by this <see cref="T:VelocityDB.Server.IEventProcessor"/>
-            </summary>
-        </member>
-        <member name="M:VelocityDB.Server.IEventProcessor.Halt">
-            <summary>
-            Signal that this <see cref="T:VelocityDB.Server.IEventProcessor"/> should stop when it has finished consuming at the next clean break.
-            It will call <see cref="M:VelocityDB.Server.ISequenceBarrier.Alert"/> to notify the thread to check status.
-            </summary>
-        </member>
-        <member name="M:VelocityDB.Server.IEventProcessor.Run">
-            <summary>
-            Starts this instance 
-            </summary>
-        </member>
-        <member name="T:VelocityDB.Server.InsufficientCapacityException">
-            <summary>
-            Used to alert <see cref="T:VelocityDB.Server.IEventProcessor"/>s waiting at a <see cref="T:VelocityDB.Server.ISequenceBarrier"/> of status changes.
-            </summary>
-        </member>
-        <member name="F:VelocityDB.Server.InsufficientCapacityException.Instance">
-            <summary>
-            Pre-allocated exception to avoid garbage generation
-            </summary>
-        </member>
-        <member name="M:VelocityDB.Server.InsufficientCapacityException.#ctor">
-            <summary>
-            Private constructor so only a single instance exists.
-            </summary>
-        </member>
-        <member name="T:VelocityDB.Server.ISequenceBarrier">
-            <summary>
-            Coordination barrier for tracking the cursor for producers and sequence of
-            dependent <see cref="T:VelocityDB.Server.IEventProcessor"/>s for a <see cref="T:VelocityDB.Server.RingBuffer`1"/>
-            </summary>
-        </member>
-        <member name="M:VelocityDB.Server.ISequenceBarrier.WaitFor(System.Int64)">
-            <summary>
-            Wait for the given sequence to be available for consumption.
-            </summary>
-            <param name="sequence">sequence to wait for</param>
-            <returns>the sequence up to which is available</returns>
-            <exception cref="T:VelocityDB.Server.AlertException">if a status change has occurred for the Disruptor</exception>
-        </member>
-        <member name="M:VelocityDB.Server.ISequenceBarrier.WaitFor(System.Int64,System.TimeSpan)">
-            <summary>
-            Wait for the given sequence to be available for consumption with a time out.
-            </summary>
-            <param name="sequence">sequence to wait for</param>
-            <param name="timeout">timeout value</param>
-            <returns>the sequence up to which is available</returns>
-            <exception cref="T:VelocityDB.Server.AlertException">if a status change has occurred for the Disruptor</exception>
-        </member>
-        <member name="P:VelocityDB.Server.ISequenceBarrier.Cursor">
-            <summary>
-            Delegate a call to the <see cref="P:VelocityDB.Server.Sequencer.Cursor"/>
-            Returns the value of the cursor for events that have been published.
-            </summary>
-        </member>
-        <member name="P:VelocityDB.Server.ISequenceBarrier.IsAlerted">
-            <summary>
-            The current alert status for the barrier.
-            Returns true if in alert otherwise false.
-            </summary>
-        </member>
-        <member name="M:VelocityDB.Server.ISequenceBarrier.Alert">
-            <summary>
-             Alert the <see cref="T:VelocityDB.Server.IEventProcessor"/> of a status change and stay in this status until cleared.
-            </summary>
-        </member>
-        <member name="M:VelocityDB.Server.ISequenceBarrier.ClearAlert">
-            <summary>
-            Clear the current alert status.
-            </summary>
-        </member>
-        <member name="M:VelocityDB.Server.ISequenceBarrier.CheckAlert">
-            <summary>
-            Check if an alert has been raised and throw an <see cref="T:VelocityDB.Server.AlertException"/> if it has.
-            </summary>
-            <exception cref="T:VelocityDB.Server.AlertException">AlertException if alert has been raised.</exception>
-        </member>
-        <member name="T:VelocityDB.Server.IWaitStrategy">
-            <summary>
-            Strategy employed for making <see cref="T:VelocityDB.Server.IEventProcessor"/>s wait on a <see cref="T:VelocityDB.Server.RingBuffer`1"/>.
-            </summary>
-        </member>
-        <member name="M:VelocityDB.Server.IWaitStrategy.WaitFor(System.Int64,VelocityDB.Server.Sequence,VelocityDB.Server.Sequence[],VelocityDB.Server.ISequenceBarrier)">
-            <summary>
-            Wait for the given sequence to be available
-            </summary>
-            <param name="sequence">sequence to be waited on.</param>
-            <param name="cursor">Ring buffer cursor on which to wait.</param>
-            <param name="dependents">dependents further back the chain that must advance first</param>
-            <param name="barrier">barrier the <see cref="T:VelocityDB.Server.IEventProcessor"/> is waiting on.</param>
-            <returns>the sequence that is available which may be greater than the requested sequence.</returns>
-        </member>
-        <member name="M:VelocityDB.Server.IWaitStrategy.WaitFor(System.Int64,VelocityDB.Server.Sequence,VelocityDB.Server.Sequence[],VelocityDB.Server.ISequenceBarrier,System.TimeSpan)">
-            <summary>
-            Wait for the given sequence to be available with a timeout specified.
-            </summary>
-            <param name="sequence">sequence to be waited on.</param>
-            <param name="cursor">cursor on which to wait.</param>
-            <param name="dependents">dependents further back the chain that must advance first</param>
-            <param name="barrier">barrier the processor is waiting on.</param>
-            <param name="timeout">timeout value to abort after.</param>
-            <returns>the sequence that is available which may be greater than the requested sequence.</returns>
-            <exception cref="T:VelocityDB.Server.AlertException">AlertException if the status of the Disruptor has changed.</exception>
-        </member>
-        <member name="M:VelocityDB.Server.IWaitStrategy.SignalAllWhenBlocking">
-            <summary>
-            Signal those <see cref="T:VelocityDB.Server.IEventProcessor"/> waiting that the cursor has advanced.
-            </summary>
-        </member>
-        <member name="T:VelocityDB.Server.MultiThreadedLowContentionClaimStrategy">
-            <summary>
-            Strategy to be used when there are multiple producer threads claiming sequences.
-            
-            This strategy requires sufficient cores to allow multiple publishers to be concurrently claiming sequences.
-            </summary>
-        </member>
-        <member name="M:VelocityDB.Server.MultiThreadedLowContentionClaimStrategy.#ctor(System.Int32)">
-            <summary>
-            Construct a new multi-threaded publisher <see cref="T:VelocityDB.Server.IClaimStrategy"/> for a given buffer size.
-            </summary>
-            <param name="bufferSize">bufferSize for the underlying data structure.</param>
-        </member>
-        <member name="M:VelocityDB.Server.MultiThreadedLowContentionClaimStrategy.SerialisePublishing(System.Int64,VelocityDB.Server.Sequence,System.Int64)">
-            <summary>
-             Serialise publishers in sequence and set cursor to latest available sequence.
-            </summary>
-            <param name="sequence">sequence to be applied</param>
-            <param name="cursor">cursor to serialise against.</param>
-            <param name="batchSize">batchSize of the sequence.</param>
-        </member>
-        <member name="T:VelocityDB.Server.MutableLong">
-            <summary>
-            Holder class for a long value.
-            </summary>
-        </member>
-        <member name="P:VelocityDB.Server.MutableLong.Value">
-            <summary>
-            Internal value
-            </summary>
-        </member>
-        <member name="M:VelocityDB.Server.MutableLong.#ctor(System.Int64)">
-            <summary>
-             Create a new instance of a mutable long
-            </summary>
-            <param name="value"></param>
-        </member>
-        <member name="T:VelocityDB.Server.ProcessingSequenceBarrier">
-            <summary>
-            <see cref="T:VelocityDB.Server.ISequenceBarrier"/> handed out for gating <see cref="T:VelocityDB.Server.IEventProcessor"/> on a cursor sequence and optional dependent <see cref="T:VelocityDB.Server.IEventProcessor"/>s
-            </summary>
-        </member>
-        <member name="T:VelocityDB.Server.RingBuffer`1">
-            <summary>
-            Ring based store of reusable entries containing the data representing an event being exchanged between event publisher and <see cref="T:VelocityDB.Server.IEventProcessor"/>s.
-            </summary>
-            <typeparam name="T">implementation storing the data for sharing during exchange or parallel coordination of an event.</typeparam>
-        </member>
-        <member name="M:VelocityDB.Server.RingBuffer`1.#ctor(System.Func{`0},VelocityDB.Server.IClaimStrategy,VelocityDB.Server.IWaitStrategy)">
-            <summary>
-            Construct a RingBuffer with the full option set.
-            </summary>
-            <param name="eventFactory">eventFactory to create entries for filling the RingBuffer</param>
-            <param name="claimStrategy">threading strategy for publisher claiming entries in the ring.</param>
-            <param name="waitStrategy">waiting strategy employed by processorsToTrack waiting on entries becoming available.</param>
-        </member>
-        <member name="M:VelocityDB.Server.RingBuffer`1.#ctor(System.Func{`0},System.Int32)">
-            <summary>
-            Construct a RingBuffer with default strategies of:
-            <see cref="T:VelocityDB.Server.MultiThreadedLowContentionClaimStrategy"/> and <see cref="T:VelocityDB.Server.BlockingWaitStrategy"/></summary>
-            <param name="eventFactory"> eventFactory to create entries for filling the RingBuffer</param>
-            <param name="bufferSize"></param>
-        </member>
-        <member name="P:VelocityDB.Server.RingBuffer`1.Item(System.Int64)">
-            <summary>
-             Get the event for a given sequence in the RingBuffer.
-            </summary>
-            <param name="sequence">sequence for the event</param>
-        </member>
-        <member name="T:VelocityDB.Server.Sequence">
-            <summary>
-            Cache line padded sequence counter.
-            Can be used across threads without worrying about false sharing if a located adjacent to another counter in memory.
-            </summary>
-        </member>
-        <member name="M:VelocityDB.Server.Sequence.#ctor">
-            <summary>
-            Default Constructor that uses an initial value of <see cref="F:VelocityDB.Server.Sequencer.InitialCursorValue"/>
-            </summary>
-        </member>
-        <member name="M:VelocityDB.Server.Sequence.#ctor(System.Int64)">
-            <summary>
-            Construct a new sequence counter that can be tracked across threads.
-            </summary>
-            <param name="initialValue">initial value for the counter</param>
-        </member>
-        <member name="P:VelocityDB.Server.Sequence.Value">
-            <summary>
-            Current sequence number
-            </summary>
-        </member>
-        <member name="M:VelocityDB.Server.Sequence.LazySet(System.Int64)">
-            <summary>
-            Eventually sets to the given value.
-            </summary>
-            <param name="value">the new value</param>
-        </member>
-        <member name="M:VelocityDB.Server.Sequence.CompareAndSet(System.Int64,System.Int64)">
-            <summary>
-            Atomically set the value to the given updated value if the current value == the expected value.
-            </summary>
-            <param name="expectedSequence">the expected value for the sequence</param>
-            <param name="nextSequence">the new value for the sequence</param>
-            <returns>true if successful. False return indicates that the actual value was not equal to the expected value.</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Sequence.ToString">
-            <summary>
-            Value of the <see cref="T:VelocityDB.Server.Sequence"/> as a String.
-            </summary>
-            <returns>String representation of the sequence.</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Sequence.IncrementAndGet">
-            <summary>
-             Increments the sequence and stores the result, as an atomic operation.
-            </summary>
-            <returns>incremented sequence</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Sequence.AddAndGet(System.Int64)">
-            <summary>
-             Increments the sequence and stores the result, as an atomic operation.
-            </summary>
-            <returns>incremented sequence</returns>
-        </member>
-        <member name="T:VelocityDB.Server.Sequencer">
-            <summary>
-            Coordinator for claiming sequences for access to a data structure while tracking dependent <see cref="T:VelocityDB.Server.Sequence"/>s
-            </summary>
-        </member>
-        <member name="F:VelocityDB.Server.Sequencer.InitialCursorValue">
-            <summary>
-            Set to -1 as sequence starting point
-            </summary>
-        </member>
-        <member name="M:VelocityDB.Server.Sequencer.#ctor(VelocityDB.Server.IClaimStrategy,VelocityDB.Server.IWaitStrategy)">
-            <summary>
-            Construct a Sequencer with the selected strategies.
-            </summary>
-            <param name="claimStrategy">claimStrategy for those claiming sequences.</param>
-            <param name="waitStrategy">waitStrategy for those waiting on sequences.</param>
-        </member>
-        <member name="M:VelocityDB.Server.Sequencer.SetGatingSequences(VelocityDB.Server.Sequence[])">
-            <summary>
-            Set the sequences that will gate publishers to prevent the buffer wrapping.
-            
-            This method must be called prior to claiming sequences otherwise
-            a <see cref="T:System.NullReferenceException"/> will be thrown.
-            </summary>
-            <param name="sequences">sequences to be to be gated on.</param>
-        </member>
-        <member name="M:VelocityDB.Server.Sequencer.NewBarrier(VelocityDB.Server.Sequence[])">
-            <summary>
-            Create a <see cref="T:VelocityDB.Server.ISequenceBarrier"/> that gates on the the cursor and a list of <see cref="T:VelocityDB.Server.Sequence"/>s
-            </summary>
-            <param name="sequencesToTrack"></param>
-            <returns></returns>
-        </member>
-        <member name="M:VelocityDB.Server.Sequencer.NewBatchDescriptor(System.Int32)">
-            <summary>
-            Create a new {@link BatchDescriptor} that is the minimum of the requested size
-            and the buffer size.
-            </summary>
-            <param name="size">size for the batch</param>
-            <returns>the new <see cref="T:VelocityDB.Server.BatchDescriptor"/></returns>
-        </member>
-        <member name="P:VelocityDB.Server.Sequencer.BufferSize">
-            <summary>
-            The capacity of the data structure to hold entries.
-            </summary>
-        </member>
-        <member name="P:VelocityDB.Server.Sequencer.Cursor">
-            <summary>
-            Get the value of the cursor indicating the published sequence.
-            </summary>
-        </member>
-        <member name="M:VelocityDB.Server.Sequencer.HasAvailableCapacity(System.Int32)">
-            <summary>
-            Has the buffer got capacity to allocate another sequence.  This is a concurrent
-            method so the response should only be taken as an indication of available capacity.
-            </summary>
-            <param name="availableCapacity">availableCapacity in the buffer</param>
-            <returns>true if the buffer has the capacity to allocate the next sequence otherwise false.</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Sequencer.Next">
-            <summary>
-            Claim the next event in sequence for publishing.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:VelocityDB.Server.Sequencer.TryNext(System.Int32)">
-            <summary>
-            Attempt to claim the next event in sequence for publishing.  Will return the
-            number of the slot if there is at least <param name="availableCapacity"></param> slots
-            available. 
-            </summary>
-            <returns>the claimed sequence value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Sequencer.Next(VelocityDB.Server.BatchDescriptor)">
-            <summary>
-            Claim the next batch of sequence numbers for publishing.
-            </summary>
-            <param name="batchDescriptor">batchDescriptor to be updated for the batch range.</param>
-            <returns>the updated batchDescriptor.</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Sequencer.Claim(System.Int64)">
-            <summary>
-            Claim a specific sequence when only one publisher is involved.
-            </summary>
-            <param name="sequence">sequence to be claimed.</param>
-            <returns>sequence just claimed.</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Sequencer.Publish(System.Int64)">
-            <summary>
-            Publish an event and make it visible to <see cref="T:VelocityDB.Server.IEventProcessor"/>s
-            </summary>
-            <param name="sequence">sequence to be published</param>
-        </member>
-        <member name="M:VelocityDB.Server.Sequencer.Publish(VelocityDB.Server.BatchDescriptor)">
-            <summary>
-            Publish the batch of events in sequence.
-            </summary>
-            <param name="batchDescriptor">batchDescriptor to be published.</param>
-        </member>
-        <member name="M:VelocityDB.Server.Sequencer.ForcePublish(System.Int64)">
-            <summary>
-            Force the publication of a cursor sequence.
-            
-            Only use this method when forcing a sequence and you are sure only one publisher exists.
-            This will cause the cursor to advance to this sequence.
-            </summary>
-            <param name="sequence">sequence which is to be forced for publication.</param>
-        </member>
-        <member name="T:VelocityDB.Server.Util">
-            <summary>
-            Set of common functions used by the Disruptor
-            </summary>
-        </member>
-        <member name="M:VelocityDB.Server.Util.CeilingNextPowerOfTwo(System.Int32)">
-            <summary>
-            Calculate the next power of 2, greater than or equal to x.
-            </summary>
-            <param name="x">Value to round up</param>
-            <returns>The next power of 2 from x inclusive</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Util.IsPowerOf2(System.Int32)">
-            <summary>
-            Test whether a given integer is a power of 2 
-            </summary>
-            <param name="x"></param>
-            <returns></returns>
-        </member>
-        <member name="M:VelocityDB.Server.Util.GetMinimumSequence(VelocityDB.Server.Sequence[])">
-            <summary>
-            Get the minimum sequence from an array of <see cref="T:VelocityDB.Server.Sequence"/>s.
-            </summary>
-            <param name="sequences">sequences to compare.</param>
-            <returns>the minimum sequence found or lon.MaxValue if the array is empty.</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Util.GetSequencesFor(VelocityDB.Server.IEventProcessor[])">
-            <summary>
-            Get an array of <see cref="T:VelocityDB.Server.Sequence"/>s for the passed <see cref="T:VelocityDB.Server.IEventProcessor"/>s
-            </summary>
-            <param name="processors">processors for which to get the sequences</param>
-            <returns>the array of <see cref="T:VelocityDB.Server.Sequence"/>s</returns>
-        </member>
-        <member name="T:VelocityDB.Server.Volatile">
-            <summary>
-             A small toolkit of classes that support lock-free thread-safe programming on single variables and arrays
-            </summary>
-        </member>
-        <member name="F:VelocityDB.Server.Volatile.CacheLineSize">
-            <summary>
-             Size of a cache line in bytes
-            </summary>
-        </member>
-        <member name="T:VelocityDB.Server.Volatile.Integer">
-            <summary>
-            An integer value that may be updated atomically
-            </summary>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.Integer.#ctor(System.Int32)">
-            <summary>
-            Create a new <see cref="T:VelocityDB.Server.Volatile.Integer"/> with the given initial value.
-            </summary>
-            <param name="value">Initial value</param>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.Integer.ReadUnfenced">
-            <summary>
-            Read the value without applying any fence
-            </summary>
-            <returns>The current value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.Integer.ReadAcquireFence">
-            <summary>
-            Read the value applying acquire fence semantic
-            </summary>
-            <returns>The current value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.Integer.ReadFullFence">
-            <summary>
-            Read the value applying full fence semantic
-            </summary>
-            <returns>The current value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.Integer.ReadCompilerOnlyFence">
-            <summary>
-            Read the value applying a compiler only fence, no CPU fence is applied
-            </summary>
-            <returns>The current value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.Integer.WriteReleaseFence(System.Int32)">
-            <summary>
-            Write the value applying release fence semantic
-            </summary>
-            <param name="newValue">The new value</param>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.Integer.WriteFullFence(System.Int32)">
-            <summary>
-            Write the value applying full fence semantic
-            </summary>
-            <param name="newValue">The new value</param>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.Integer.WriteCompilerOnlyFence(System.Int32)">
-            <summary>
-            Write the value applying a compiler fence only, no CPU fence is applied
-            </summary>
-            <param name="newValue">The new value</param>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.Integer.WriteUnfenced(System.Int32)">
-            <summary>
-            Write without applying any fence
-            </summary>
-            <param name="newValue">The new value</param>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.Integer.AtomicCompareExchange(System.Int32,System.Int32)">
-            <summary>
-            Atomically set the value to the given updated value if the current value equals the comparand
-            </summary>
-            <param name="newValue">The new value</param>
-            <param name="comparand">The comparand (expected value)</param>
-            <returns></returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.Integer.AtomicExchange(System.Int32)">
-            <summary>
-            Atomically set the value to the given updated value
-            </summary>
-            <param name="newValue">The new value</param>
-            <returns>The original value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.Integer.AtomicAddAndGet(System.Int32)">
-            <summary>
-            Atomically add the given value to the current value and return the sum
-            </summary>
-            <param name="delta">The value to be added</param>
-            <returns>The sum of the current value and the given value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.Integer.AtomicIncrementAndGet">
-            <summary>
-            Atomically increment the current value and return the new value
-            </summary>
-            <returns>The incremented value.</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.Integer.AtomicDecrementAndGet">
-            <summary>
-            Atomically increment the current value and return the new value
-            </summary>
-            <returns>The decremented value.</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.Integer.ToString">
-            <summary>
-            Returns the string representation of the current value.
-            </summary>
-            <returns>the string representation of the current value.</returns>
-        </member>
-        <member name="T:VelocityDB.Server.Volatile.Long">
-            <summary>
-            A long value that may be updated atomically
-            </summary>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.Long.#ctor(System.Int64)">
-            <summary>
-            Create a new <see cref="T:VelocityDB.Server.Volatile.Long"/> with the given initial value.
-            </summary>
-            <param name="value">Initial value</param>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.Long.ReadUnfenced">
-            <summary>
-            Read the value without applying any fence
-            </summary>
-            <returns>The current value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.Long.ReadAcquireFence">
-            <summary>
-            Read the value applying acquire fence semantic
-            </summary>
-            <returns>The current value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.Long.ReadFullFence">
-            <summary>
-            Read the value applying full fence semantic
-            </summary>
-            <returns>The current value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.Long.ReadCompilerOnlyFence">
-            <summary>
-            Read the value applying a compiler only fence, no CPU fence is applied
-            </summary>
-            <returns>The current value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.Long.WriteReleaseFence(System.Int64)">
-            <summary>
-            Write the value applying release fence semantic
-            </summary>
-            <param name="newValue">The new value</param>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.Long.WriteFullFence(System.Int64)">
-            <summary>
-            Write the value applying full fence semantic
-            </summary>
-            <param name="newValue">The new value</param>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.Long.WriteCompilerOnlyFence(System.Int64)">
-            <summary>
-            Write the value applying a compiler fence only, no CPU fence is applied
-            </summary>
-            <param name="newValue">The new value</param>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.Long.WriteUnfenced(System.Int64)">
-            <summary>
-            Write without applying any fence
-            </summary>
-            <param name="newValue">The new value</param>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.Long.AtomicCompareExchange(System.Int64,System.Int64)">
-            <summary>
-            Atomically set the value to the given updated value if the current value equals the comparand
-            </summary>
-            <param name="newValue">The new value</param>
-            <param name="comparand">The comparand (expected value)</param>
-            <returns></returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.Long.AtomicExchange(System.Int64)">
-            <summary>
-            Atomically set the value to the given updated value
-            </summary>
-            <param name="newValue">The new value</param>
-            <returns>The original value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.Long.AtomicAddAndGet(System.Int64)">
-            <summary>
-            Atomically add the given value to the current value and return the sum
-            </summary>
-            <param name="delta">The value to be added</param>
-            <returns>The sum of the current value and the given value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.Long.AtomicIncrementAndGet">
-            <summary>
-            Atomically increment the current value and return the new value
-            </summary>
-            <returns>The incremented value.</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.Long.AtomicDecrementAndGet">
-            <summary>
-            Atomically increment the current value and return the new value
-            </summary>
-            <returns>The decremented value.</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.Long.ToString">
-            <summary>
-            Returns the string representation of the current value.
-            </summary>
-            <returns>the string representation of the current value.</returns>
-        </member>
-        <member name="T:VelocityDB.Server.Volatile.Boolean">
-            <summary>
-            A boolean value that may be updated atomically
-            </summary>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.Boolean.#ctor(System.Boolean)">
-            <summary>
-            Create a new <see cref="T:VelocityDB.Server.Volatile.Boolean"/> with the given initial value.
-            </summary>
-            <param name="value">Initial value</param>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.Boolean.ReadUnfenced">
-            <summary>
-            Read the value without applying any fence
-            </summary>
-            <returns>The current value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.Boolean.ReadAcquireFence">
-            <summary>
-            Read the value applying acquire fence semantic
-            </summary>
-            <returns>The current value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.Boolean.ReadFullFence">
-            <summary>
-            Read the value applying full fence semantic
-            </summary>
-            <returns>The current value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.Boolean.ReadCompilerOnlyFence">
-            <summary>
-            Read the value applying a compiler only fence, no CPU fence is applied
-            </summary>
-            <returns>The current value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.Boolean.WriteReleaseFence(System.Boolean)">
-            <summary>
-            Write the value applying release fence semantic
-            </summary>
-            <param name="newValue">The new value</param>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.Boolean.WriteFullFence(System.Boolean)">
-            <summary>
-            Write the value applying full fence semantic
-            </summary>
-            <param name="newValue">The new value</param>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.Boolean.WriteCompilerOnlyFence(System.Boolean)">
-            <summary>
-            Write the value applying a compiler fence only, no CPU fence is applied
-            </summary>
-            <param name="newValue">The new value</param>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.Boolean.WriteUnfenced(System.Boolean)">
-            <summary>
-            Write without applying any fence
-            </summary>
-            <param name="newValue">The new value</param>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.Boolean.AtomicCompareExchange(System.Boolean,System.Boolean)">
-            <summary>
-            Atomically set the value to the given updated value if the current value equals the comparand
-            </summary>
-            <param name="newValue">The new value</param>
-            <param name="comparand">The comparand (expected value)</param>
-            <returns></returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.Boolean.AtomicExchange(System.Boolean)">
-            <summary>
-            Atomically set the value to the given updated value
-            </summary>
-            <param name="newValue">The new value</param>
-            <returns>The original value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.Boolean.ToString">
-            <summary>
-            Returns the string representation of the current value.
-            </summary>
-            <returns>the string representation of the current value.</returns>
-        </member>
-        <member name="T:VelocityDB.Server.Volatile.Reference`1">
-            <summary>
-            A reference that may be updated atomically
-            </summary>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.Reference`1.#ctor(`0)">
-            <summary>
-            Create a new <see cref="T:VelocityDB.Server.Volatile.Reference`1"/> with the given initial value.
-            </summary>
-            <param name="value">Initial value</param>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.Reference`1.ReadUnfenced">
-            <summary>
-            Read the value without applying any fence
-            </summary>
-            <returns>The current value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.Reference`1.ReadAcquireFence">
-            <summary>
-            Read the value applying acquire fence semantic
-            </summary>
-            <returns>The current value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.Reference`1.ReadFullFence">
-            <summary>
-            Read the value applying full fence semantic
-            </summary>
-            <returns>The current value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.Reference`1.ReadCompilerOnlyFence">
-            <summary>
-            Read the value applying a compiler only fence, no CPU fence is applied
-            </summary>
-            <returns>The current value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.Reference`1.WriteReleaseFence(`0)">
-            <summary>
-            Write the value applying release fence semantic
-            </summary>
-            <param name="newValue">The new value</param>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.Reference`1.WriteFullFence(`0)">
-            <summary>
-            Write the value applying full fence semantic
-            </summary>
-            <param name="newValue">The new value</param>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.Reference`1.WriteCompilerOnlyFence(`0)">
-            <summary>
-            Write the value applying a compiler fence only, no CPU fence is applied
-            </summary>
-            <param name="newValue">The new value</param>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.Reference`1.WriteUnfenced(`0)">
-            <summary>
-            Write without applying any fence
-            </summary>
-            <param name="newValue">The new value</param>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.Reference`1.AtomicCompareExchange(`0,`0)">
-            <summary>
-            Atomically set the value to the given updated value if the current value equals the comparand
-            </summary>
-            <param name="newValue">The new value</param>
-            <param name="comparand">The comparand (expected value)</param>
-            <returns></returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.Reference`1.AtomicExchange(`0)">
-            <summary>
-            Atomically set the value to the given updated value
-            </summary>
-            <param name="newValue">The new value</param>
-            <returns>The original value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.Reference`1.ToString">
-            <summary>
-            Returns the string representation of the current value.
-            </summary>
-            <returns>the string representation of the current value.</returns>
-        </member>
-        <member name="T:VelocityDB.Server.Volatile.IntegerArray">
-            <summary>
-            An <see cref="T:System.Int32"/> array that may be updated atomically
-            </summary>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.IntegerArray.#ctor(System.Int32)">
-            <summary>
-            Create a new <see cref="T:VelocityDB.Server.Volatile.IntegerArray"/> of a given length
-            </summary>
-            <param name="length">Length of the array</param>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.IntegerArray.#ctor(System.Int32[])">
-            <summary>
-             Create a new AtomicIntegerArray with the same length as, and all elements copied from, the given array.
-            </summary>
-            <param name="array"></param>
-        </member>
-        <member name="P:VelocityDB.Server.Volatile.IntegerArray.Length">
-            <summary>
-            Length of the array
-            </summary>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.IntegerArray.ReadUnfenced(System.Int32)">
-            <summary>
-            Read the value without applying any fence
-            </summary>
-            <param name="index">The index of the element.</param>
-            <returns>The current value.</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.IntegerArray.ReadAcquireFence(System.Int32)">
-            <summary>
-            Read the value applying acquire fence semantic
-            </summary>
-            <param name="index">The element index</param>
-            <returns>The current value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.IntegerArray.ReadFullFence(System.Int32)">
-            <summary>
-            Read the value applying full fence semantic
-            </summary>
-            <param name="index">The element index</param>
-            <returns>The current value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.IntegerArray.ReadCompilerOnlyFence(System.Int32)">
-            <summary>
-            Read the value applying a compiler only fence, no CPU fence is applied
-            </summary>
-            <param name="index">The element index</param>
-            <returns>The current value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.IntegerArray.WriteReleaseFence(System.Int32,System.Int32)">
-            <summary>
-            Write the value applying release fence semantic
-            </summary>
-            <param name="index">The element index</param>
-            <param name="newValue">The new value</param>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.IntegerArray.WriteFullFence(System.Int32,System.Int32)">
-            <summary>
-            Write the value applying full fence semantic
-            </summary>
-            <param name="index">The element index</param>
-            <param name="newValue">The new value</param>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.IntegerArray.WriteCompilerOnlyFence(System.Int32,System.Int32)">
-            <summary>
-            Write the value applying a compiler fence only, no CPU fence is applied
-            </summary>
-            <param name="index">The element index</param>
-            <param name="newValue">The new value</param>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.IntegerArray.WriteUnfenced(System.Int32,System.Int32)">
-            <summary>
-            Write without applying any fence
-            </summary>
-            <param name="index">The index.</param>
-            <param name="newValue">The new value</param>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.IntegerArray.AtomicCompareExchange(System.Int32,System.Int32,System.Int32)">
-            <summary>
-            Atomically set the value to the given updated value if the current value equals the comparand
-            </summary>
-            <param name="newValue">The new value</param>
-            <param name="comparand">The comparand (expected value)</param>
-            <param name="index">The index.</param>
-            <returns>The original value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.IntegerArray.AtomicExchange(System.Int32,System.Int32)">
-            <summary>
-            Atomically set the value to the given updated value
-            </summary>
-            <param name="newValue">The new value</param>
-            <param name="index">The index.</param>
-            <returns>The original value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.IntegerArray.AtomicAddAndGet(System.Int32,System.Int32)">
-            <summary>
-            Atomically add the given value to the current value and return the sum
-            </summary>
-            <param name="delta">The value to be added</param>
-            <param name="index">The index.</param>
-            <returns>The sum of the current value and the given value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.IntegerArray.AtomicIncrementAndGet(System.Int32)">
-            <summary>
-            Atomically increment the current value and return the new value
-            </summary>
-            <param name="index">The index.</param>
-            <returns>The incremented value.</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.IntegerArray.AtomicDecrementAndGet(System.Int32)">
-            <summary>
-            Atomically increment the current value and return the new value
-            </summary>
-            <param name="index">The index.</param>
-            <returns>The decremented value.</returns>
-        </member>
-        <member name="T:VelocityDB.Server.Volatile.LongArray">
-            <summary>
-            A <see cref="T:System.Int64"/> array that may be updated atomically
-            </summary>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.LongArray.#ctor(System.Int32)">
-            <summary>
-            Create a new <see cref="T:VelocityDB.Server.Volatile.LongArray"/> of a given length
-            </summary>
-            <param name="length">Length of the array</param>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.LongArray.#ctor(System.Int64[])">
-            <summary>
-             Create a new <see cref="T:VelocityDB.Server.Volatile.LongArray"/>with the same length as, and all elements copied from, the given array.
-            </summary>
-            <param name="array"></param>
-        </member>
-        <member name="P:VelocityDB.Server.Volatile.LongArray.Length">
-            <summary>
-            Length of the array
-            </summary>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.LongArray.ReadUnfenced(System.Int32)">
-            <summary>
-            Read the value without applying any fence
-            </summary>
-            <param name="index">The index of the element.</param>
-            <returns>The current value.</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.LongArray.ReadAcquireFence(System.Int32)">
-            <summary>
-            Read the value applying acquire fence semantic
-            </summary>
-            <param name="index">The element index</param>
-            <returns>The current value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.LongArray.ReadFullFence(System.Int32)">
-            <summary>
-            Read the value applying full fence semantic
-            </summary>
-            <param name="index">The element index</param>
-            <returns>The current value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.LongArray.ReadCompilerOnlyFence(System.Int32)">
-            <summary>
-            Read the value applying a compiler only fence, no CPU fence is applied
-            </summary>
-            <param name="index">The element index</param>
-            <returns>The current value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.LongArray.WriteReleaseFence(System.Int32,System.Int64)">
-            <summary>
-            Write the value applying release fence semantic
-            </summary>
-            <param name="index">The element index</param>
-            <param name="newValue">The new value</param>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.LongArray.WriteFullFence(System.Int32,System.Int64)">
-            <summary>
-            Write the value applying full fence semantic
-            </summary>
-            <param name="index">The element index</param>
-            <param name="newValue">The new value</param>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.LongArray.WriteCompilerOnlyFence(System.Int32,System.Int64)">
-            <summary>
-            Write the value applying a compiler fence only, no CPU fence is applied
-            </summary>
-            <param name="index">The element index</param>
-            <param name="newValue">The new value</param>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.LongArray.WriteUnfenced(System.Int32,System.Int64)">
-            <summary>
-            Write without applying any fence
-            </summary>
-            <param name="index">The index.</param>
-            <param name="newValue">The new value</param>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.LongArray.AtomicCompareExchange(System.Int32,System.Int64,System.Int64)">
-            <summary>
-            Atomically set the value to the given updated value if the current value equals the comparand
-            </summary>
-            <param name="newValue">The new value</param>
-            <param name="comparand">The comparand (expected value)</param>
-            <param name="index">The index.</param>
-            <returns>The original value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.LongArray.AtomicExchange(System.Int32,System.Int64)">
-            <summary>
-            Atomically set the value to the given updated value
-            </summary>
-            <param name="newValue">The new value</param>
-            <param name="index">The index.</param>
-            <returns>The original value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.LongArray.AtomicAddAndGet(System.Int32,System.Int64)">
-            <summary>
-            Atomically add the given value to the current value and return the sum
-            </summary>
-            <param name="delta">The value to be added</param>
-            <param name="index">The index.</param>
-            <returns>The sum of the current value and the given value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.LongArray.AtomicIncrementAndGet(System.Int32)">
-            <summary>
-            Atomically increment the current value and return the new value
-            </summary>
-            <param name="index">The index.</param>
-            <returns>The incremented value.</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.LongArray.AtomicDecrementAndGet(System.Int32)">
-            <summary>
-            Atomically increment the current value and return the new value
-            </summary>
-            <param name="index">The index.</param>
-            <returns>The decremented value.</returns>
-        </member>
-        <member name="T:VelocityDB.Server.Volatile.BooleanArray">
-            <summary>
-            A <see cref="T:System.Boolean"/> array that may be updated atomically
-            </summary>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.BooleanArray.#ctor(System.Int32)">
-            <summary>
-            Create a new <see cref="T:VelocityDB.Server.Volatile.BooleanArray"/> of a given length
-            </summary>
-            <param name="length">Length of the array</param>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.BooleanArray.#ctor(System.Boolean[])">
-            <summary>
-             Create a new <see cref="T:VelocityDB.Server.Volatile.BooleanArray"/>with the same length as, and all elements copied from, the given array.
-            </summary>
-            <param name="array"></param>
-        </member>
-        <member name="P:VelocityDB.Server.Volatile.BooleanArray.Length">
-            <summary>
-            Length of the array
-            </summary>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.BooleanArray.ReadUnfenced(System.Int32)">
-            <summary>
-            Read the value without applying any fence
-            </summary>
-            <param name="index">The index of the element.</param>
-            <returns>The current value.</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.BooleanArray.ReadAcquireFence(System.Int32)">
-            <summary>
-            Read the value applying acquire fence semantic
-            </summary>
-            <param name="index">The element index</param>
-            <returns>The current value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.BooleanArray.ReadFullFence(System.Int32)">
-            <summary>
-            Read the value applying full fence semantic
-            </summary>
-            <param name="index">The element index</param>
-            <returns>The current value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.BooleanArray.ReadCompilerOnlyFence(System.Int32)">
-            <summary>
-            Read the value applying a compiler only fence, no CPU fence is applied
-            </summary>
-            <param name="index">The element index</param>
-            <returns>The current value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.BooleanArray.WriteReleaseFence(System.Int32,System.Boolean)">
-            <summary>
-            Write the value applying release fence semantic
-            </summary>
-            <param name="index">The element index</param>
-            <param name="newValue">The new value</param>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.BooleanArray.WriteFullFence(System.Int32,System.Boolean)">
-            <summary>
-            Write the value applying full fence semantic
-            </summary>
-            <param name="index">The element index</param>
-            <param name="newValue">The new value</param>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.BooleanArray.WriteCompilerOnlyFence(System.Int32,System.Boolean)">
-            <summary>
-            Write the value applying a compiler fence only, no CPU fence is applied
-            </summary>
-            <param name="index">The element index</param>
-            <param name="newValue">The new value</param>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.BooleanArray.WriteUnfenced(System.Int32,System.Boolean)">
-            <summary>
-            Write without applying any fence
-            </summary>
-            <param name="index">The index.</param>
-            <param name="newValue">The new value</param>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.BooleanArray.AtomicCompareExchange(System.Int32,System.Boolean,System.Boolean)">
-            <summary>
-            Atomically set the value to the given updated value if the current value equals the comparand
-            </summary>
-            <param name="newValue">The new value</param>
-            <param name="comparand">The comparand (expected value)</param>
-            <param name="index">The index.</param>
-            <returns>The original value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.BooleanArray.AtomicExchange(System.Int32,System.Boolean)">
-            <summary>
-            Atomically set the value to the given updated value
-            </summary>
-            <param name="newValue">The new value</param>
-            <param name="index">The index.</param>
-            <returns>The original value</returns>
-        </member>
-        <member name="T:VelocityDB.Server.Volatile.ReferenceArray`1">
-            <summary>
-            A reference array that may be updated atomically
-            </summary>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.ReferenceArray`1.#ctor(System.Int32)">
-            <summary>
-            Create a new <see cref="T:VelocityDB.Server.Volatile.ReferenceArray`1"/> of a given length
-            </summary>
-            <param name="length">Length of the array</param>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.ReferenceArray`1.#ctor(`0[])">
-            <summary>
-             Create a new <see cref="T:VelocityDB.Server.Volatile.ReferenceArray`1"/>with the same length as, and all elements copied from, the given array.
-            </summary>
-            <param name="array"></param>
-        </member>
-        <member name="P:VelocityDB.Server.Volatile.ReferenceArray`1.Length">
-            <summary>
-            Length of the array
-            </summary>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.ReferenceArray`1.ReadUnfenced(System.Int32)">
-            <summary>
-            Read the value without applying any fence
-            </summary>
-            <param name="index">The index of the element.</param>
-            <returns>The current value.</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.ReferenceArray`1.ReadAcquireFence(System.Int32)">
-            <summary>
-            Read the value applying acquire fence semantic
-            </summary>
-            <param name="index">The element index</param>
-            <returns>The current value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.ReferenceArray`1.ReadFullFence(System.Int32)">
-            <summary>
-            Read the value applying full fence semantic
-            </summary>
-            <param name="index">The element index</param>
-            <returns>The current value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.ReferenceArray`1.ReadCompilerOnlyFence(System.Int32)">
-            <summary>
-            Read the value applying a compiler only fence, no CPU fence is applied
-            </summary>
-            <param name="index">The element index</param>
-            <returns>The current value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.ReferenceArray`1.WriteReleaseFence(System.Int32,`0)">
-            <summary>
-            Write the value applying release fence semantic
-            </summary>
-            <param name="index">The element index</param>
-            <param name="newValue">The new value</param>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.ReferenceArray`1.WriteFullFence(System.Int32,`0)">
-            <summary>
-            Write the value applying full fence semantic
-            </summary>
-            <param name="index">The element index</param>
-            <param name="newValue">The new value</param>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.ReferenceArray`1.WriteCompilerOnlyFence(System.Int32,`0)">
-            <summary>
-            Write the value applying a compiler fence only, no CPU fence is applied
-            </summary>
-            <param name="index">The element index</param>
-            <param name="newValue">The new value</param>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.ReferenceArray`1.WriteUnfenced(System.Int32,`0)">
-            <summary>
-            Write without applying any fence
-            </summary>
-            <param name="index">The index.</param>
-            <param name="newValue">The new value</param>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.ReferenceArray`1.AtomicCompareExchange(System.Int32,`0,`0)">
-            <summary>
-            Atomically set the value to the given updated value if the current value equals the comparand
-            </summary>
-            <param name="newValue">The new value</param>
-            <param name="comparand">The comparand (expected value)</param>
-            <param name="index">The index.</param>
-            <returns>The original value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.ReferenceArray`1.AtomicExchange(System.Int32,`0)">
-            <summary>
-            Atomically set the value to the given updated value
-            </summary>
-            <param name="newValue">The new value</param>
-            <param name="index">The index.</param>
-            <returns>The original value</returns>
-        </member>
-        <member name="T:VelocityDB.Server.Volatile.PaddedInteger">
-            <summary>
-            An integer value that may be updated atomically and is guaranteed to live on its own cache line (to prevent false sharing)
-            </summary>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.PaddedInteger.#ctor(System.Int32)">
-            <summary>
-            Create a new <see cref="T:VelocityDB.Server.Volatile.PaddedInteger"/> with the given initial value.
-            </summary>
-            <param name="value">Initial value</param>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.PaddedInteger.ReadUnfenced">
-            <summary>
-            Read the value without applying any fence
-            </summary>
-            <returns>The current value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.PaddedInteger.ReadAcquireFence">
-            <summary>
-            Read the value applying acquire fence semantic
-            </summary>
-            <returns>The current value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.PaddedInteger.ReadFullFence">
-            <summary>
-            Read the value applying full fence semantic
-            </summary>
-            <returns>The current value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.PaddedInteger.ReadCompilerOnlyFence">
-            <summary>
-            Read the value applying a compiler only fence, no CPU fence is applied
-            </summary>
-            <returns>The current value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.PaddedInteger.WriteReleaseFence(System.Int32)">
-            <summary>
-            Write the value applying release fence semantic
-            </summary>
-            <param name="newValue">The new value</param>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.PaddedInteger.WriteFullFence(System.Int32)">
-            <summary>
-            Write the value applying full fence semantic
-            </summary>
-            <param name="newValue">The new value</param>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.PaddedInteger.WriteCompilerOnlyFence(System.Int32)">
-            <summary>
-            Write the value applying a compiler fence only, no CPU fence is applied
-            </summary>
-            <param name="newValue">The new value</param>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.PaddedInteger.WriteUnfenced(System.Int32)">
-            <summary>
-            Write without applying any fence
-            </summary>
-            <param name="newValue">The new value</param>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.PaddedInteger.AtomicCompareExchange(System.Int32,System.Int32)">
-            <summary>
-            Atomically set the value to the given updated value if the current value equals the comparand
-            </summary>
-            <param name="newValue">The new value</param>
-            <param name="comparand">The comparand (expected value)</param>
-            <returns></returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.PaddedInteger.AtomicExchange(System.Int32)">
-            <summary>
-            Atomically set the value to the given updated value
-            </summary>
-            <param name="newValue">The new value</param>
-            <returns>The original value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.PaddedInteger.AtomicAddAndGet(System.Int32)">
-            <summary>
-            Atomically add the given value to the current value and return the sum
-            </summary>
-            <param name="delta">The value to be added</param>
-            <returns>The sum of the current value and the given value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.PaddedInteger.AtomicIncrementAndGet">
-            <summary>
-            Atomically increment the current value and return the new value
-            </summary>
-            <returns>The incremented value.</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.PaddedInteger.AtomicDecrementAndGet">
-            <summary>
-            Atomically increment the current value and return the new value
-            </summary>
-            <returns>The decremented value.</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.PaddedInteger.ToString">
-            <summary>
-            Returns the string representation of the current value.
-            </summary>
-            <returns>the string representation of the current value.</returns>
-        </member>
-        <member name="T:VelocityDB.Server.Volatile.PaddedLong">
-            <summary>
-            A long value that may be updated atomically and is guaranteed to live on its own cache line (to prevent false sharing)
-            </summary>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.PaddedLong.#ctor(System.Int64)">
-            <summary>
-            Create a new <see cref="T:VelocityDB.Server.Volatile.PaddedLong"/> with the given initial value.
-            </summary>
-            <param name="value">Initial value</param>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.PaddedLong.ReadUnfenced">
-            <summary>
-            Read the value without applying any fence
-            </summary>
-            <returns>The current value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.PaddedLong.ReadAcquireFence">
-            <summary>
-            Read the value applying acquire fence semantic
-            </summary>
-            <returns>The current value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.PaddedLong.ReadFullFence">
-            <summary>
-            Read the value applying full fence semantic
-            </summary>
-            <returns>The current value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.PaddedLong.ReadCompilerOnlyFence">
-            <summary>
-            Read the value applying a compiler only fence, no CPU fence is applied
-            </summary>
-            <returns>The current value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.PaddedLong.WriteReleaseFence(System.Int64)">
-            <summary>
-            Write the value applying release fence semantic
-            </summary>
-            <param name="newValue">The new value</param>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.PaddedLong.WriteFullFence(System.Int64)">
-            <summary>
-            Write the value applying full fence semantic
-            </summary>
-            <param name="newValue">The new value</param>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.PaddedLong.WriteCompilerOnlyFence(System.Int64)">
-            <summary>
-            Write the value applying a compiler fence only, no CPU fence is applied
-            </summary>
-            <param name="newValue">The new value</param>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.PaddedLong.WriteUnfenced(System.Int64)">
-            <summary>
-            Write without applying any fence
-            </summary>
-            <param name="newValue">The new value</param>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.PaddedLong.AtomicCompareExchange(System.Int64,System.Int64)">
-            <summary>
-            Atomically set the value to the given updated value if the current value equals the comparand
-            </summary>
-            <param name="newValue">The new value</param>
-            <param name="comparand">The comparand (expected value)</param>
-            <returns></returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.PaddedLong.AtomicExchange(System.Int64)">
-            <summary>
-            Atomically set the value to the given updated value
-            </summary>
-            <param name="newValue">The new value</param>
-            <returns>The original value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.PaddedLong.AtomicAddAndGet(System.Int64)">
-            <summary>
-            Atomically add the given value to the current value and return the sum
-            </summary>
-            <param name="delta">The value to be added</param>
-            <returns>The sum of the current value and the given value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.PaddedLong.AtomicIncrementAndGet">
-            <summary>
-            Atomically increment the current value and return the new value
-            </summary>
-            <returns>The incremented value.</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.PaddedLong.AtomicDecrementAndGet">
-            <summary>
-            Atomically increment the current value and return the new value
-            </summary>
-            <returns>The decremented value.</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.PaddedLong.ToString">
-            <summary>
-            Returns the string representation of the current value.
-            </summary>
-            <returns>the string representation of the current value.</returns>
-        </member>
-        <member name="T:VelocityDB.Server.Volatile.PaddedBoolean">
-            <summary>
-            A boolean value that may be updated atomically and is guaranteed to live on its own cache line (to prevent false sharing)
-            </summary>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.PaddedBoolean.#ctor(System.Boolean)">
-            <summary>
-            Create a new <see cref="T:VelocityDB.Server.Volatile.PaddedBoolean"/> with the given initial value.
-            </summary>
-            <param name="value">Initial value</param>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.PaddedBoolean.ReadUnfenced">
-            <summary>
-            Read the value without applying any fence
-            </summary>
-            <returns>The current value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.PaddedBoolean.ReadAcquireFence">
-            <summary>
-            Read the value applying acquire fence semantic
-            </summary>
-            <returns>The current value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.PaddedBoolean.ReadFullFence">
-            <summary>
-            Read the value applying full fence semantic
-            </summary>
-            <returns>The current value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.PaddedBoolean.ReadCompilerOnlyFence">
-            <summary>
-            Read the value applying a compiler only fence, no CPU fence is applied
-            </summary>
-            <returns>The current value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.PaddedBoolean.WriteReleaseFence(System.Boolean)">
-            <summary>
-            Write the value applying release fence semantic
-            </summary>
-            <param name="newValue">The new value</param>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.PaddedBoolean.WriteFullFence(System.Boolean)">
-            <summary>
-            Write the value applying full fence semantic
-            </summary>
-            <param name="newValue">The new value</param>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.PaddedBoolean.WriteCompilerOnlyFence(System.Boolean)">
-            <summary>
-            Write the value applying a compiler fence only, no CPU fence is applied
-            </summary>
-            <param name="newValue">The new value</param>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.PaddedBoolean.WriteUnfenced(System.Boolean)">
-            <summary>
-            Write without applying any fence
-            </summary>
-            <param name="newValue">The new value</param>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.PaddedBoolean.AtomicCompareExchange(System.Boolean,System.Boolean)">
-            <summary>
-            Atomically set the value to the given updated value if the current value equals the comparand
-            </summary>
-            <param name="newValue">The new value</param>
-            <param name="comparand">The comparand (expected value)</param>
-            <returns></returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.PaddedBoolean.AtomicExchange(System.Boolean)">
-            <summary>
-            Atomically set the value to the given updated value
-            </summary>
-            <param name="newValue">The new value</param>
-            <returns>The original value</returns>
-        </member>
-        <member name="M:VelocityDB.Server.Volatile.PaddedBoolean.ToString">
-            <summary>
-            Returns the string representation of the current value.
-            </summary>
-            <returns>the string representation of the current value.</returns>
+        <member name="T:VelocityDB.LZ4n.LZ4Codec">
+            <summary>Unsafe LZ4 codec.</summary>
+        </member>
+        <member name="F:VelocityDB.LZ4n.LZ4Codec.MEMORY_USAGE">
+            <summary>
+            Memory usage formula : N->2^N Bytes (examples : 10 -> 1KB; 12 -> 4KB ; 16 -> 64KB; 20 -> 1MB; etc.)
+            Increasing memory usage improves compression ratio
+            Reduced memory usage can improve speed, due to cache effect
+            Default value is 14, for 16KB, which nicely fits into Intel x86 L1 cache
+            </summary>
+        </member>
+        <member name="F:VelocityDB.LZ4n.LZ4Codec.NOTCOMPRESSIBLE_DETECTIONLEVEL">
+            <summary>
+            Decreasing this value will make the algorithm skip faster data segments considered "incompressible"
+            This may decrease compression ratio dramatically, but will be faster on incompressible data
+            Increasing this value will make the algorithm search more before declaring a segment "incompressible"
+            This could improve compression a bit, but will be slower on incompressible data
+            The default value (6) is recommended
+            </summary>
+        </member>
+        <member name="M:VelocityDB.LZ4n.LZ4Codec.MaximumOutputLength(System.Int32)">
+            <summary>Gets maximum the length of the output.</summary>
+            <param name="inputLength">Length of the input.</param>
+            <returns>Maximum number of bytes needed for compressed buffer.</returns>
+        </member>
+        <member name="M:VelocityDB.LZ4n.LZ4Codec.BlockCopy(System.Byte*,System.Byte*,System.Int32)">
+            <summary>Copies block of memory.</summary>
+            <param name="src">The source.</param>
+            <param name="dst">The destination.</param>
+            <param name="len">The length (in bytes).</param>
+        </member>
+        <member name="M:VelocityDB.LZ4n.LZ4Codec.BlockFill(System.Byte*,System.Int32,System.Byte)">
+            <summary>Copies block of memory.</summary>
+            <param name="dst">The destination.</param>
+            <param name="len">The length (in bytes).</param>
+            <param name="val">The value.</param>
+        </member>
+        <member name="M:VelocityDB.LZ4n.LZ4Codec.Encode64(System.Byte*,System.Byte*,System.Int32,System.Int32)">
+            <summary>Encodes the specified input.</summary>
+            <param name="input">The input.</param>
+            <param name="output">The output.</param>
+            <param name="inputLength">Length of the input.</param>
+            <param name="outputLength">Length of the output.</param>
+            <returns>Number of bytes written.</returns>
+        </member>
+        <member name="M:VelocityDB.LZ4n.LZ4Codec.Encode64(System.Byte[],System.Int32,System.Int32,System.Byte[],System.Int32,System.Int32)">
+            <summary>Encodes the specified input.</summary>
+            <param name="input">The input.</param>
+            <param name="inputOffset">The input offset.</param>
+            <param name="inputLength">Length of the input.</param>
+            <param name="output">The output.</param>
+            <param name="outputOffset">The output offset.</param>
+            <param name="outputLength">Length of the output.</param>
+            <returns>Number of bytes written.</returns>
+        </member>
+        <member name="M:VelocityDB.LZ4n.LZ4Codec.Encode64(System.Byte[],System.Int32,System.Int32)">
+            <summary>Encodes the specified input.</summary>
+            <param name="input">The input.</param>
+            <param name="inputOffset">The input offset.</param>
+            <param name="inputLength">Length of the input.</param>
+            <returns>Compressed buffer.</returns>
+        </member>
+        <member name="M:VelocityDB.LZ4n.LZ4Codec.Decode64(System.Byte*,System.Int32,System.Byte*,System.Int32,System.Boolean)">
+            <summary>Decodes the specified input.</summary>
+            <param name="input">The input.</param>
+            <param name="inputLength">Length of the input.</param>
+            <param name="output">The output.</param>
+            <param name="outputLength">Length of the output.</param>
+            <param name="knownOutputLength">Set it to <c>true</c> if output length is known.</param>
+            <returns>Number of bytes written.</returns>
+        </member>
+        <member name="M:VelocityDB.LZ4n.LZ4Codec.Decode64(System.Byte[],System.Int32,System.Int32,System.Byte[],System.Int32,System.Int32,System.Boolean)">
+            <summary>Decode64s the specified input.</summary>
+            <param name="input">The input.</param>
+            <param name="inputOffset">The input offset.</param>
+            <param name="inputLength">Length of the input.</param>
+            <param name="output">The output.</param>
+            <param name="outputOffset">The output offset.</param>
+            <param name="outputLength">Length of the output.</param>
+            <param name="knownOutputLength">Set it to <c>true</c> if output length is known.</param>
+            <returns>Number of bytes written.</returns>
+        </member>
+        <member name="M:VelocityDB.LZ4n.LZ4Codec.Decode64(System.Byte[],System.Int32,System.Int32,System.Int32)">
+            <summary>Decode64s the specified input.</summary>
+            <param name="input">The input.</param>
+            <param name="inputOffset">The input offset.</param>
+            <param name="inputLength">Length of the input.</param>
+            <param name="outputLength">Length of the output.</param>
+            <returns>Decompressed buffer.</returns>
+        </member>
+        <member name="M:VelocityDB.LZ4n.LZ4Codec.Encode64HC(System.Byte[],System.Int32,System.Int32,System.Byte[],System.Int32,System.Int32)">
+            <summary>Encodes the specified input using HC codec.</summary>
+            <param name="input">The input.</param>
+            <param name="inputOffset">The input offset.</param>
+            <param name="inputLength">Length of the input.</param>
+            <param name="output">The output.</param>
+            <param name="outputOffset">The output offset.</param>
+            <param name="outputLength">Length of the output.</param>
+            <returns>Number of bytes written. NOTE: when output buffer is too small it returns negative value.</returns>
+        </member>
+        <member name="M:VelocityDB.LZ4n.LZ4Codec.Encode64HC(System.Byte[],System.Int32,System.Int32)">
+            <summary>Encodes the specified input using HC codec.</summary>
+            <param name="input">The input.</param>
+            <param name="inputOffset">The input offset.</param>
+            <param name="inputLength">Length of the input.</param>
+            <returns>Buffer with compressed data (NOTE: it can be bigger than input).</returns>
         </member>
     </members>
 </doc>

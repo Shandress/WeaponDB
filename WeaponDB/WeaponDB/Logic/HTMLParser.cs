@@ -147,7 +147,7 @@ namespace WeaponDB.Logic
         /// Processes an article on weapons of certain category e.g. submachine gun or pistols.
         /// </summary>
         /// <returns>A list of Weapon object</returns>
-        private List<Weapon> ProcessArticle()
+        public List<Weapon> ProcessArticle()
         {
             Dictionary<string, string> actionTypes = ParseTables
                 (Constants.XPaths.actionTypesHeaders, Constants.XPaths.actionTypesContent);

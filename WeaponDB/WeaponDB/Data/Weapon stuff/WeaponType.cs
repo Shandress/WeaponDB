@@ -3,24 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using VelocityDb.Session;
-using VelocityDb;
 using WeaponDB.Data.Weapon_stuff;
 using System.Drawing;
-using VelocityDb.Collection;
 
 namespace WeaponDB.Data.Weapon_stuff
 {
     /// <summary>
     /// A weapon type e.g. handgun, submachine gun, sniper rifle etc.
     /// </summary>
-    class WeaponType: OptimizedPersistable
+    class WeaponType
     {
-        
-        private string name;
-        private List<string> actionTypes;
-        private string subType;
-        
 
         /// <summary>
         /// Creates a new WeaponType with a specified name.
@@ -32,13 +24,7 @@ namespace WeaponDB.Data.Weapon_stuff
             this.ActionTypes = new List<string>();
         }
 
-        /// <summary>
-        /// Creates a new Weapontype.
-        /// </summary>
-        public WeaponType() 
-        {
-            this.ActionTypes = new List<string>();
-        }
+        public WeaponType() : this(string.Empty) { }
 
         /// <summary>
         /// Creates a Weapon type that is a copy of a a specified WeaponType.
@@ -46,58 +32,27 @@ namespace WeaponDB.Data.Weapon_stuff
         /// <param name="other">WeaponType to copy.</param>
         public WeaponType(WeaponType other)
         {
-            this.Name = other.name;
-            this.actionTypes = new List<string>();
+            this.Name = other.Name;
             this.ActionTypes = other.ActionTypes;
-            this.subType = other.subType;
+            this.SubType = other.SubType;
         }
 
         /// <summary>
         ///  Weapon's action types e.g. Automatic, Semi-automatic or both.;
         /// </summary>
-        public List<string> ActionTypes
-        {
-            get 
-            { 
-                return actionTypes; 
-            }
-            set 
-            { 
-                Update(); 
-                actionTypes = new List<string>(value); 
-            }
-        }
+        public List<string> ActionTypes { get; set; }
+        
 
         /// <summary>
         /// Weapon's type e.g. handgun, submachine gun, sniper rifle.
         /// </summary>
-        public string Name
-        {
-            get 
-            { 
-                return name; 
-            }
-            set 
-            { 
-                Update(); 
-                name = value; 
-            }
-        }
+        public string Name { get; set; }
+        
 
         /// <summary>
         /// Weapon's subType e.g. Anti-Aircraft gun, Heavy machinegun
         /// </summary>
-        public string Subtype
-        {
-            get 
-            { 
-                return subType; 
-            }
-            set 
-            { 
-                Update(); 
-                subType = value; 
-            }
-        }
+        public string SubType { get; set; }
+       
     }
 }

@@ -3,61 +3,47 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using VelocityDb.Session;
-using VelocityDb;
 using WeaponDB.Data.Weapon_stuff;
 using System.Drawing;
-using VelocityDb.Collection;
 using System.Drawing.Imaging;
+using System.Windows.Media.Imaging;
+
 
 namespace WeaponDB.Data.Weapon_stuff
 {
     /// <summary>
     /// Represents a firearm.
     /// </summary>
-    class Weapon: OptimizedPersistable
+    class Weapon
     {
-        private string name;
-        private string cartridge; // TO DO: make it a list bc there can be more than one.
-        private Country country;
         private Date year;
-        private Image image;
-        private WeaponType weaponType;
-        private string manufacturer;
 
-        /// <summary>
-        /// Initializes a new instance of a Weapon object.
-        /// </summary>
-        public Weapon() { }
-        
+        public Weapon()
+        {
+            Cartridges = new List<string>();
+        }
+        public int ID { get; set; }
 
         /// <summary>
         /// A weapon's name e.g. AK-47.
         /// </summary>
-        public string Name
-        {
-            get { return name; }
-            set { Update(); name = value; }
-        }
+        public string Name { get; set; }
+        
         
         /// <summary>
         /// A weapon's country of origin. Represented by an object 
-        /// that hold country's name and flag image,
+        /// that holds country's name and flag image,
         /// </summary>
-        public Country Country
-        {
-            get { return country; }
-            set { Update(); country = value; }
-        }
+        public Country Country { get; set; }
+
+        public WriteableBitmap picture { get; set; }
+       
 
         /// <summary>
         /// TO DO: make it a list bc there can be more than one.
         /// </summary>
-        public string Cartridge
-        {
-            get { return cartridge; }
-            set { Update(); cartridge = value;  }
-        }
+        public List<string> Cartridges { get; set; }
+        
 
         /// <summary>
         /// Weapon's year or decade of origin e.g. 2001 or 1990s.
@@ -65,21 +51,17 @@ namespace WeaponDB.Data.Weapon_stuff
         public string Year
         {
             get { return year.ToString(); }
-            set { Update(); year = new Date(value); }
+            set 
+            {
+                year = new Date(value); 
+            }
         }
 
         /// <summary>
-        /// An image of a weapon.
+        /// Path to an image of a weapon.
         /// </summary>
-        public Image Image
-        {
-            get { return image; }
-            set 
-            { 
-                Update();
-                image = new Bitmap(value); 
-            }
-        }
+        public string ImageReference { get; set; }
+       
 
         /// <summary>
         /// A weapon type e.g Assault rifle, Machine gun. 
@@ -87,20 +69,14 @@ namespace WeaponDB.Data.Weapon_stuff
         ///     1. Action type e.g. Automatic, Semi-automatic;
         ///     2. SubType e.g. Anti-Aircraft gun, Heavy machinegun
         /// </summary>
-        public WeaponType WeaponType
-        {
-            get { return weaponType; }
-            set { Update(); weaponType = new WeaponType(value); }
-        }
+        public WeaponType WeaponType { get; set; }
+       
 
         /// <summary>
         /// Weapon's manufacturing company.
         /// </summary>
-        public string Manufacturer
-        {
-            get { return manufacturer; }
-            set { Update(); manufacturer = value; }
-        }
+        public string Manufacturer { get; set; }
+        
 
     }
 }

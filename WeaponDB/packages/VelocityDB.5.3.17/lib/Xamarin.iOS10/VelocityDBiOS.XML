@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        <name>VelocityDBUniversalWindows</name>
+        <name>VelocityDBiOS</name>
     </assembly>
     <members>
         <member name="T:VelocityDb.AllObjects`1">
@@ -74,6 +74,15 @@
             <param name="index">The index requested</param>
             <returns>Element at requested index</returns>
         </member>
+        <member name="M:VelocityDb.AllObjectsExtension.Skip``1(VelocityDb.AllObjects{``0},System.Int32)">
+            <summary>
+            Bypasses a specified number of elements in a sequence and then returns the remaining elements. Overrides <see cref="M:System.Linq.Enumerable.Skip``1(System.Collections.Generic.IEnumerable{``0},System.Int32)"/> for improved performance
+            </summary>
+            <typeparam name="TSource">The type of the elements of source</typeparam>
+            <param name="source">Source collection</param>
+            <param name="count">The number of elements to skip before returning the remaining elements.</param>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/>that contains the elements that occur after the specified index in the input sequence.</returns>
+        </member>
         <member name="T:VelocityDb.AutoPlacement">
             <summary>
             This is the placement manager of objects persisted using <see cref="M:VelocityDb.Session.SessionBase.Persist(System.Object)"/>, 
@@ -121,6 +130,9 @@
             <summary>
             Wrapper object for a byte[] of data for comparing objects within a BTreeSet. Wrapper is used so that this data can be placed on a seperate <see cref="T:VelocityDb.Page"/>
             </summary>
+        </member>
+        <member name="M:VelocityDb.Collection.BTree.BTreeByteArray.ReadMe(VelocityDb.TypeInfo.TypeVersion,System.Byte[],System.Int32@,VelocityDb.Session.SessionBase,VelocityDb.Page,System.Boolean,VelocityDb.TypeInfo.Schema,System.Boolean,System.Collections.Generic.List{VelocityDb.IOptimizedPersistable},System.Int32,System.Int32,System.Boolean)">
+            <inheritdoc />
         </member>
         <member name="P:VelocityDb.Collection.BTree.BTreeByteArray.Cache">
             <summary>
@@ -457,10 +469,38 @@
         <member name="P:VelocityDb.Collection.BTree.BTreeLeaf`2.Cache">
             <inheritdoc />
         </member>
+        <member name="P:VelocityDb.Collection.BTree.BTreeLeafBase`2.Cache">
+            <inheritdoc />
+        </member>
+        <member name="P:VelocityDb.Collection.BTree.BTreeLeafBase`2.Keys">
+            <summary>
+            Gets the keys for this leaf node
+            </summary>
+        </member>
+        <member name="P:VelocityDb.Collection.BTree.BTreeLeafBase`2.Values">
+            <summary>
+            Gets the values for this leaf node
+            </summary>
+        </member>
+        <member name="P:VelocityDb.Collection.BTree.BTreeLeafBase`2.KeysCount">
+            <summary>
+            Get the number of keys that are in use for this leaf node.
+            </summary>
+        </member>
         <member name="P:VelocityDb.Collection.BTree.BTreeLeafBase`2.FlushIfPageFull">
             <summary>
             We don't want to flush other BTreeLeaf pages while looking for a placement page
             </summary>
+        </member>
+        <member name="M:VelocityDb.Collection.BTree.BTreeLeafBase`2.GetKey(System.Int32)">
+            <summary>
+            Get a key at a given index
+            </summary>
+            <param name="index">index of Key to get</param>
+            <returns>A key</returns>
+        </member>
+        <member name="P:VelocityDb.Collection.BTree.BTreeLeafOidShort`2.Keys">
+            <inheritdoc />
         </member>
         <member name="T:VelocityDb.Collection.BTree.BTreeMap`2">
             <summary>
@@ -1705,6 +1745,417 @@
             Gets the internal sorted list of objects contained in the set.
             </summary>
         </member>
+        <member name="M:VelocityDb.Collection.SortedWeakRefSet.TryGetValue(System.Object,VelocityDb.OptimizedPersistable@)">
+            <summary>
+            Gets the value associated with the specified key.
+            </summary>
+            <param name="key">The key of the value to get.</param>
+            <param name="value">When this method returns, contains the value associated with the specified key, if the key is found; otherwise, the default value for the type of the value parameter. This parameter is passed uninitialized.</param>
+            <returns><c>true</c> if this contains an element with the specified key; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="M:VelocityDb.Collection.Spatial.NodeBase.calculateMinimumBoundingRectangle">
+            <summary>
+            Given a node object, calculate the node Minimum Bounding Rectangle from it's entries. Used in consistency checking
+            </summary>
+            <returns></returns>  
+        </member>
+        <member name="M:VelocityDb.Collection.Spatial.NodeLeaf.condenseTree(VelocityDb.Collection.Spatial.RTree)">
+            <summary>
+            Used by delete(). Ensures that all nodes from the passed node up to the root have the minimum number of entries.
+            Note that the parent and parentEntry stacks are expected to contain the nodeIds of all parents up to the root.
+            </summary>
+            <param name="rTree"></param>
+        </member>
+        <member name="T:VelocityDb.Collection.Spatial.Point">
+            <summary>
+            Points are most often considered within the framework of Euclidean geometry, where they are one of the fundamental objects. Euclid originally defined the point as "that which has no part". In two-dimensional Euclidean space, a point is represented by an ordered pair (x,?y) of numbers, where the first number conventionally represents the horizontal and is often denoted by x, and the second number conventionally represents the vertical and is often denoted by y.
+            </summary>
+        </member>
+        <member name="F:VelocityDb.Collection.Spatial.Point.x">
+            <summary>
+            The (x, y) coordinates of the point.
+            </summary>
+        </member>
+        <member name="F:VelocityDb.Collection.Spatial.Point.y">
+            <summary>
+            The (x, y) coordinates of the point.
+            </summary>
+        </member>
+        <member name="M:VelocityDb.Collection.Spatial.Point.#ctor(System.Double,System.Double)">
+            <summary>
+            Creates a Point instance
+            </summary>
+            <param name="x">The x coordinate of the point</param>
+            <param name="y">The y coordinate of the point</param>   
+        </member>
+        <member name="M:VelocityDb.Collection.Spatial.Point.ToString">
+            <summary>
+            return "(" + x + ", " + y + ")";
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:VelocityDb.Collection.Spatial.PriorityQueue`2">
+            <summary>
+            Priority Queue that stores values and priorities.
+            </summary>
+        </member>
+        <member name="M:VelocityDb.Collection.Spatial.PriorityQueue`2.#ctor(System.Boolean,System.Int32)">
+            <summary>
+            Creates a PriorityQue
+            </summary>
+            <param name="sortOrderAscending">order ascending if true otherwise order descending</param>
+            <param name="initialCapacity">improve performance by setting expected size initially</param>
+        </member>
+        <member name="M:VelocityDb.Collection.Spatial.PriorityQueue`2.sortsEarlierThan(`0,`0)">
+            <summary>
+            Determine if p1 should be ordered before p2 or vice versa
+            </summary>
+            <param name="p1"></param>
+            <param name="p2"></param>
+            <returns>true if p1 has an earlier sort order than p2</returns> 
+        </member>
+        <member name="M:VelocityDb.Collection.Spatial.PriorityQueue`2.Insert(`1,`0)">
+            <summary>
+            Insert a value, append it to the arrays, then reheapify by promoting it to the correct place.
+            </summary>
+            <param name="value">the value inserted</param>
+            <param name="priority">the priority of the value inserted</param>
+        </member>
+        <member name="P:VelocityDb.Collection.Spatial.PriorityQueue`2.Count">
+            <summary>
+            The number of values and priorities that are in the que
+            </summary>
+        </member>
+        <member name="M:VelocityDb.Collection.Spatial.PriorityQueue`2.Clear">
+            <summary>
+            Removes all values and priorities from the que
+            </summary>
+        </member>
+        <member name="P:VelocityDb.Collection.Spatial.PriorityQueue`2.ValuePeek">
+            <summary>
+            Peek at the next value
+            </summary>
+        </member>
+        <member name="P:VelocityDb.Collection.Spatial.PriorityQueue`2.PriorityPeek">
+            <summary>
+            Peek at the next Priority
+            </summary>
+        </member>
+        <member name="M:VelocityDb.Collection.Spatial.PriorityQueue`2.Pop">
+            <summary>
+            Get the value with the lowest priority creates a "hole" at the root of the tree. The algorithm swaps the hole with the appropriate child, until 
+            the last entry will fit correctly into the hole (ie is lower priority than its children)
+            </summary>
+            <returns>the Value with the lowest priority</returns>
+        </member>
+        <member name="P:VelocityDb.Collection.Spatial.PriorityQueue`2.SortOrderAscending">
+            <summary>
+            Set or get sorting order, ascending if true or descending if false. 
+            </summary>
+        </member>
+        <member name="T:VelocityDb.Collection.Spatial.PriorityQueueRTree">
+            <summary>
+            RTree uses double for priorities and Rectangle as values
+            </summary>
+        </member>
+        <member name="T:VelocityDb.Collection.Spatial.Rectangle">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:VelocityDb.Collection.Spatial.Rectangle.MinX">
+            <summary>
+            The low x coordinate
+            </summary>
+        </member>
+        <member name="P:VelocityDb.Collection.Spatial.Rectangle.MaxX">
+            <summary>
+            The high x coordinate
+            </summary>
+        </member>
+        <member name="P:VelocityDb.Collection.Spatial.Rectangle.MinY">
+            <summary>
+            The low y coordinate
+            </summary>
+        </member>
+        <member name="P:VelocityDb.Collection.Spatial.Rectangle.MaxY">
+            <summary>
+            The high y coordinate
+            </summary>
+        </member>
+        <member name="M:VelocityDb.Collection.Spatial.Rectangle.#ctor(System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            
+            </summary>
+            <param name="x1">coordinate of any corner of the rectangle</param>
+            <param name="y1">(see x1)</param>
+            <param name="x2">coordinate of the opposite corner</param>
+            <param name="y2">(see x2)</param>
+        </member>
+        <member name="M:VelocityDb.Collection.Spatial.Rectangle.set(VelocityDb.Collection.Spatial.Rectangle)">
+            <summary>
+            Sets the size of this rectangle to equal the passed rectangle.
+            </summary>
+            <param name="r"></param>  
+        </member>
+        <member name="M:VelocityDb.Collection.Spatial.Rectangle.edgeOverlaps(VelocityDb.Collection.Spatial.Rectangle)">
+            <summary>
+            Determine whether an edge of this rectangle overlies the equivalent edge of the passed rectangle
+            </summary>
+            <param name="r"></param>
+            <returns></returns>
+        </member>
+        <member name="M:VelocityDb.Collection.Spatial.Rectangle.Intersects(System.Nullable{VelocityDb.Collection.Spatial.Rectangle}@)">
+            <summary>
+            Determine whether this rectangle intersects the passed rectangle
+            </summary>
+            <param name="r">The rectangle that might intersect this rectangle</param>
+            <returns>return true if the rectangles intersect, false if they do not intersect</returns>
+        </member>
+        <member name="M:VelocityDb.Collection.Spatial.Rectangle.Contains(VelocityDb.Collection.Spatial.Rectangle)">
+            <summary>
+            Determine whether this rectangle contains the passed rectangle
+            </summary>
+            <param name="r">The rectangle that might be contained by this rectangle</param>
+            <returns>return true if this rectangle contains the passed rectangle, false if it does not</returns>
+        </member>
+        <member name="M:VelocityDb.Collection.Spatial.Rectangle.containedBy(VelocityDb.Collection.Spatial.Rectangle)">
+            <summary>
+            Determine whether this rectangle is contained by the passed rectangle
+            </summary>
+            <param name="r">The rectangle that might contain this rectangle</param>
+            <returns>return true if the passed rectangle contains this rectangle, false if it does not</returns> 
+        </member>
+        <member name="M:VelocityDb.Collection.Spatial.Rectangle.Distance(VelocityDb.Collection.Spatial.Point)">
+            <summary>
+            Return the distance between this rectangle and the passed point. If the rectangle contains the point, the distance is zero.
+            </summary>
+            <param name="p">Point to find the distance to</param>
+            <returns>return distance beween this rectangle and the passed point.</returns>
+        </member>
+        <member name="M:VelocityDb.Collection.Spatial.Rectangle.distance(System.Double,System.Double)">
+            <summary>
+            Return the distance between a rectangle and a point. If the rectangle contains the point, the distance is zero.
+            </summary>
+            <param name="pX">X coordinate of point</param>
+            <param name="pY">Y coordinate of point</param>
+            <returns>return distance beween this rectangle and the passed point.</returns>  
+        </member>
+        <member name="M:VelocityDb.Collection.Spatial.Rectangle.distanceSq(System.Double,System.Double)">
+            <summary>
+            Get the square of the distance between two points.
+            </summary>
+            <param name="pX">the x coordinate of point</param>
+            <param name="pY">the y coordinate of point</param>
+            <returns>the square of the distance between two points.</returns>
+        </member>
+        <member name="M:VelocityDb.Collection.Spatial.Rectangle.Distance(VelocityDb.Collection.Spatial.Rectangle)">
+            <summary>
+            Return the distance between this rectangle and the passed rectangle. If the rectangles overlap, the distance is zero.
+            </summary>
+            <param name="r">Rectangle to find the distance to</param>
+            <returns>return distance between this rectangle and the passed rectangle</returns>
+        </member>
+        <member name="M:VelocityDb.Collection.Spatial.Rectangle.Enlargement(VelocityDb.Collection.Spatial.Rectangle@)">
+            <summary>
+            Calculate the area by which this rectangle would be enlarged if added to the passed rectangle. Neither rectangle is altered.
+            </summary>
+            <param name="r">Rectangle to union with this rectangle, in order to compute the difference in area of the union and the original rectangle</param>
+            <returns>enlargement</returns> 
+        </member>
+        <member name="M:VelocityDb.Collection.Spatial.Rectangle.enlargement(VelocityDb.Collection.Spatial.Rectangle,VelocityDb.Collection.Spatial.Rectangle)">
+            <summary>
+            Calculate the area by which a rectangle would be enlarged if added to the passed rectangle
+            </summary>
+            <param name="r1">minimum X coordinate of rectangle 1</param>
+            <param name="r2">minimum X coordinate of rectangle 2</param>
+            <returns>return enlargement</returns> 
+        </member>
+        <member name="P:VelocityDb.Collection.Spatial.Rectangle.Area">
+            <summary>
+            Compute the area of this rectangle.
+            </summary>
+            <returns>The area of this rectangle</returns>  
+        </member>
+        <member name="M:VelocityDb.Collection.Spatial.Rectangle.Add(VelocityDb.Collection.Spatial.Rectangle)">
+            <summary>
+            Computes the union of this rectangle and the passed rectangle, storing the result in this rectangle.
+            </summary>
+            <param name="r">Rectangle to add to this rectangle</param> 
+        </member>
+        <member name="M:VelocityDb.Collection.Spatial.Rectangle.add(VelocityDb.Collection.Spatial.Point)">
+            <summary>
+            Computes the union of this rectangle and the passed point, storing the result in this rectangle.
+            </summary>
+            <param name="p">Point to add to this rectangle</param>  
+        </member>
+        <member name="M:VelocityDb.Collection.Spatial.Rectangle.union(VelocityDb.Collection.Spatial.Rectangle)">
+            <summary>
+            Find the the union of this rectangle and the passed rectangle.Neither rectangle is altered
+            </summary>
+            <param name="r">The rectangle to union with this rectangle</param>
+            <returns></returns>
+        </member>
+        <member name="M:VelocityDb.Collection.Spatial.Rectangle.GetHashCode">
+            <summary>
+            Customized hash code using the coordinates of the rectangle 37 * minX * minY * maxX * maxY
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:VelocityDb.Collection.Spatial.Rectangle.sameObject(System.Object)">
+            <summary>
+            Determine whether this rectangle is the same as another object. Note that two rectangles can be equal but not the same object, if they both have the same bounds.
+            </summary>
+            <param name="o">The object to compare with this rectangle</param>
+            <returns></returns>   
+        </member>
+        <member name="M:VelocityDb.Collection.Spatial.Rectangle.ToString">
+            <summary>
+            Return a string representation of this rectangle, in the form: (1.2, 3.4), (5.6, 7.8)
+            </summary>
+            <returns>return String String representation of this rectangle</returns>   
+        </member>
+        <member name="P:VelocityDb.Collection.Spatial.Rectangle.Width">
+            <summary>
+            The width of a rectangle
+            </summary>
+        </member>
+        <member name="P:VelocityDb.Collection.Spatial.Rectangle.Height">
+            <summary>
+            The height of a rectangle
+            </summary>
+        </member>
+        <member name="P:VelocityDb.Collection.Spatial.Rectangle.AspectRatio">
+            <summary>
+            The aspect ratio denotes the ratio of length to width of the rectangle (Width / Height)
+            </summary>
+        </member>
+        <member name="P:VelocityDb.Collection.Spatial.Rectangle.Centre">
+            <summary>
+            Gets the centre of the rectangle
+            </summary>
+        </member>
+        <member name="T:VelocityDb.Collection.Spatial.RTree">
+            <summary>
+            RTree implementation inspired by description on Wikipedia http://en.wikipedia.org/wiki/R-tree
+            </summary>
+        </member>
+        <member name="F:VelocityDb.Collection.Spatial.RTree.defaultMinNodeEntries">
+            <summary>
+            default minimum number of reactangles in a leaf RTree node
+            </summary>
+        </member>
+        <member name="F:VelocityDb.Collection.Spatial.RTree.defaultMaxNodeEntries">
+            <summary>
+            default maximum number of reactangles in a leaf RTree node
+            </summary>
+        </member>
+        <member name="M:VelocityDb.Collection.Spatial.RTree.#ctor(System.Int32,System.Int32)">
+            <summary>
+            RTree implementaion customized for optimal performance with VelocityDB. Follows outline as described in http://en.wikipedia.org/wiki/R-tree
+            </summary>
+            <param name="minNodeEntries">Minimum number of entries in a node. The default value is 80.</param>
+            <param name="maxNodeEntries">Maximum number of entries in a node. The default value is 200.</param>
+        </member>
+        <member name="M:VelocityDb.Collection.Spatial.RTree.Add(VelocityDb.Collection.Spatial.Rectangle)">
+            <summary>
+            Start at the Root Node
+            Select the child that needs the least enlargement in order to fit the new geometry.
+            Repeat until at a leaf node.
+            If leaf node has available space insert Else split the entry into two nodes
+            Update parent nodes
+            Update the entry that pointed to the node with a new minimum bounding rectangle
+            Add a new entry for the second new node
+            If there is no space in the parent node, split and repeat
+            </summary>
+            <param name="r">the rectangle being added</param>
+        </member>
+        <member name="M:VelocityDb.Collection.Spatial.RTree.AddInternal(VelocityDb.Collection.Spatial.Rectangle)">
+            <summary>
+            Adds a new entry at a specified level in the tree
+            </summary>
+            <param name="r">the rectangle added</param>
+        </member>
+        <member name="M:VelocityDb.Collection.Spatial.RTree.AddInternal(VelocityDb.Collection.Spatial.Rectangle,System.Int32,VelocityDb.Collection.Spatial.NodeBase)">
+            <summary>
+            Adds a new entry at a specified level in the tree
+            </summary>
+            <param name="r">the rectangle added</param>
+            <param name="level">the level of the tree to add it at</param>
+        </member>
+        <member name="M:VelocityDb.Collection.Spatial.RTree.Remove(VelocityDb.Collection.Spatial.Rectangle)">
+            <summary>
+            Removes a rectangle from the Rtree
+            </summary>
+            <param name="r">the rectangle to delete</param>
+            <returns>true if rectangle deleted otherwise false</returns>
+        </member>
+        <member name="M:VelocityDb.Collection.Spatial.RTree.Nearest(VelocityDb.Collection.Spatial.Point,System.Double)">
+            <summary>
+            Finds the nearest rectangles to the passed point. If multiple rectangles are equally near, they will all be returned.
+            </summary>
+            <param name="p">the point we are looking for</param>
+            <param name="furthestDistance">The furthest distance away from the rectangle to search. Rectangles further than this will not be found.</param>
+            <returns>a PriorityQue containing the found recatngles and their priorities (distances from point)</returns>
+        </member>
+        <member name="M:VelocityDb.Collection.Spatial.RTree.NearestN(VelocityDb.Collection.Spatial.Point,System.UInt32,System.Double)">
+            <summary>
+            Finds the N nearest rectangles to the passed point. If multiple rectangles are equally near, they will all (but total limited to N) be returned.
+            </summary>
+            <param name="p">the point we are looking for</param>
+            <param name="count">max number of rectangles to look for</param>
+            <param name="furthestDistance">The furthest distance away from the rectangle to search. Rectangles further than this will not be found.</param>
+            <returns>a PriorityQue containing the found recatngles and their priorities (distances from point)</returns>
+        </member>
+        <member name="M:VelocityDb.Collection.Spatial.RTree.Intersects(VelocityDb.Collection.Spatial.Rectangle,System.Func{VelocityDb.Collection.Spatial.Rectangle,System.Boolean})">
+            <summary>
+            Finds all rectangles that intersect the passed rectangle.
+            </summary>
+            <param name="r">the rectangle we are intersecting with</param>
+            <param name="v">if returns true, search containues else search is ended</param>
+            <returns>true if at least one intersection was found and v returns true</returns>
+        </member>
+        <member name="M:VelocityDb.Collection.Spatial.RTree.Contains(VelocityDb.Collection.Spatial.Rectangle,System.Func{VelocityDb.Collection.Spatial.Rectangle,System.Boolean})">
+            <summary>
+            Finds all rectangles contained by the passed rectangle
+            </summary>
+            <param name="r">The rectangle for which this method finds contained rectangles.</param>
+            <param name="v">if return true, continue seach</param>
+        </member>
+        <member name="P:VelocityDb.Collection.Spatial.RTree.Count">
+            <summary>
+            Get the number of rectangles that are managed by the Rtree
+            </summary>
+        </member>
+        <member name="P:VelocityDb.Collection.Spatial.RTree.Bounds">
+            <summary>
+            Gets the bounds of all the entries in the spatial index, or null if there are no entries.
+            </summary>
+        </member>
+        <member name="M:VelocityDb.Collection.Spatial.RTree.intersects(VelocityDb.Collection.Spatial.Rectangle,System.Func{VelocityDb.Collection.Spatial.Rectangle,System.Boolean},VelocityDb.Collection.Spatial.NodeBase)">
+            <summary>
+            Recursively searches the tree for all intersecting entries.
+            Calls the passed function when a matching entry is found. Return if the passed function returns false;
+            </summary>
+            <param name="r"></param>
+            <param name="v"></param>
+            <param name="n"></param>
+            <returns></returns>
+        </member>
+        <member name="M:VelocityDb.Collection.Spatial.RTree.chooseNode(VelocityDb.Collection.Spatial.Rectangle,System.Int32)">
+            <summary>
+            Used by add(). Chooses a leaf to add the rectangle to.
+            </summary>
+            <param name="r"></param>
+            <param name="level"></param>
+            <returns></returns> 
+        </member>
+        <member name="M:VelocityDb.Collection.Spatial.RTree.checkConsistency">
+            <summary>
+            Check the consistency of the tree.
+            </summary>
+            <returns>false if an inconsistency is detected, true otherwise</returns> 
+        </member>
         <member name="T:VelocityDb.Collection.VelocityDbHashSet`1">
             <summary>
             A hash code based set
@@ -1736,6 +2187,13 @@
             </summary> 
             <param name="collection"></param>
             <param name="comparer"></param>
+        </member>
+        <member name="M:VelocityDb.Collection.VelocityDbHashSet`1.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Used by serializtion (but not by VelocityDb persistent serializtion)
+            </summary>
+            <param name="info"></param>
+            <param name="context"></param>
         </member>
         <member name="M:VelocityDb.Collection.VelocityDbHashSet`1.System#Collections#Generic#ICollection{T}#Add(`0)">
             <summary>
@@ -1786,6 +2244,13 @@
             Returns an enumerator that iterates through a collection
             </summary>
             <returns>An Enumerator object that can be used to iterate through the collection.</returns>
+        </member>
+        <member name="M:VelocityDb.Collection.VelocityDbHashSet`1.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Serialization usage other than VelocityDb serialization
+            </summary>
+            <param name="info"></param>
+            <param name="context"></param>
         </member>
         <member name="M:VelocityDb.Collection.VelocityDbHashSet`1.Add(`0)">
             <summary> 
@@ -2481,6 +2946,15 @@
             <param name="other">Other <see cref="T:VelocityDb.Database"/> object</param>
             <returns><c>true</c> if matching; otherwise <c>false</c></returns>
         </member>
+        <member name="M:VelocityDb.Database.Equals(VelocityDb.Database,VelocityDb.Database)">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Database.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Database.GetHashCode(VelocityDb.Database)">
+            <inheritdoc />
+        </member>
         <member name="P:VelocityDb.Database.FileInfo">
             <summary>
             <see cref="T:System.IO.FileInfo"/> for this <see cref="T:VelocityDb.Database"/>, not set for ServerClientSession
@@ -2522,6 +2996,9 @@
             <summary>
              Indicates if database was created in the current transactionNumber 
             </summary>
+        </member>
+        <member name="P:VelocityDb.Database.IsUpdated">
+            <inheritdoc />
         </member>
         <member name="P:VelocityDb.Database.Name">
             <summary>
@@ -2643,6 +3120,11 @@
             <returns>
              A <see cref="T:System.String"/> containing the full <see cref="T:VelocityDb.Database"/> path.
             </returns>
+        </member>
+        <member name="P:VelocityDb.DatabaseLocation.DesKey">
+            <summary>
+            Gets the Des encryption key from a .des file in user Documents folder. (Environment.SpecialFolder.MyDocuments)
+            </summary>
         </member>
         <member name="P:VelocityDb.DatabaseLocation.DirectoryPath">
             <summary>
@@ -2781,6 +3263,13 @@
             Info about a data Field of a persistent object
             </summary>
         </member>
+        <member name="M:VelocityDb.TypeInfo.DataMember.Equals(VelocityDb.TypeInfo.DataMember)">
+            <summary>
+            Determines whether two <see cref="T:VelocityDb.TypeInfo.DataMember"/> instances are equal.
+            </summary>
+            <param name="other">The object to compare with the current object.</param>
+            <returns><c>true</c> if the specified <see cref="T:VelocityDb.TypeInfo.DataMember"/> is equal to the current <see cref="T:VelocityDb.TypeInfo.DataMember"/>; otherwise, <c>false</c>.</returns>
+        </member>
         <member name="M:VelocityDb.TypeInfo.DataMember.GetMemberValue(System.Object)">
             <summary>
             Gets the value of a member within a specified object
@@ -2875,6 +3364,29 @@
             <param name="offset"></param>
             <returns></returns>
         </member>
+        <member name="P:VelocityDb.TypeInfo.DataMember.IsGuid">
+            <summary>
+            <c>true</c> if field is of type <see cref="T:System.Guid"/>
+            </summary>
+        </member>
+        <member name="P:VelocityDb.TypeInfo.DataMember.IsInterface">
+            <summary>
+            <c>true</c> if field is if type interface
+            </summary>
+        </member>
+        <member name="M:VelocityDb.TypeInfo.DataMember.GetTypeFromAnyAssemblyVersion(System.String)">
+            <summary>
+            Load type using <see cref="M:System.Type.GetType(System.String)"/>, and if fails, 
+            attempt to load same type from an assembly by assembly name, 
+            without specifying assembly version or any other part of the signature
+            </summary>
+            <param name="typeName">
+            The assembly-qualified name of the type to get.
+            See System.Type.AssemblyQualifiedName.
+            If the type is in the currently executing assembly or in Mscorlib.dll, it 
+            is sufficient to supply the type name qualified by its namespace.
+            </param>
+        </member>
         <member name="M:VelocityDb.TypeInfo.DataMember.StringToType(System.String,VelocityDb.Session.SessionBase,System.Boolean@)">
             <summary>
             Used by code generator.
@@ -2928,6 +3440,13 @@
             Do cache CacheEnum.Yes
             </summary>
         </member>
+        <member name="M:VelocityDb.TypeInfo.Schema.IsInternalType(System.UInt16)">
+            <summary>
+            Determine if a given slot is within the range of slots containing the build in/pre registered types
+            </summary>
+            <param name="slotNumber">Slot number to check</param>
+            <returns><c>true</c> if slot is within the range of build in types; otherwise <c>false</c></returns>
+        </member>
         <member name="M:VelocityDb.TypeInfo.Schema.GetTypeVersion(System.UInt32,VelocityDb.Session.SessionBase,System.Boolean)">
             <summary>
             Opens a <see cref="T:VelocityDb.TypeInfo.TypeVersion"/> object
@@ -2951,6 +3470,31 @@
             Contains info about a version of a <see cref="P:VelocityDb.TypeInfo.TypeVersion.VelocityDbType"/>. The info is used when reading/writing an object of the 
             </summary>
         </member>
+        <member name="P:VelocityDb.TypeInfo.TypeVersion.AllowOtherTypesOnSamePage">
+            <inheritdoc />
+        </member>
+        <member name="P:VelocityDb.TypeInfo.TypeVersion.BaseShape">
+            <summary>
+            Get the base <see cref="T:VelocityDb.TypeInfo.TypeVersion"/> or null if none exist
+            </summary>
+        </member>
+        <member name="P:VelocityDb.TypeInfo.TypeVersion.Cache">
+            <inheritdoc />
+        </member>
+        <member name="P:VelocityDb.TypeInfo.TypeVersion.CountStart">
+            <summary>
+            Set where <see cref="P:VelocityDb.TypeInfo.TypeVersion.AutoIncrement"/> counter should start
+            </summary>
+        </member>
+        <member name="M:VelocityDb.TypeInfo.TypeVersion.Equals(VelocityDb.TypeInfo.TypeVersion)">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.TypeInfo.TypeVersion.GetDataMemberList">
+            <summary>
+            Get a list of all <see cref="T:VelocityDb.TypeInfo.DataMember"/> of this type including base classes.
+            </summary>
+            <returns>A list of <see cref="T:VelocityDb.TypeInfo.DataMember"/> that this type or a base class contains</returns>
+        </member>
         <member name="M:VelocityDb.TypeInfo.TypeVersion.LoadMembers(VelocityDb.IOptimizedPersistable,VelocityDb.TypeInfo.Schema,System.Collections.Generic.List{VelocityDb.IOptimizedPersistable},System.Int32,System.Int32,VelocityDb.Session.SessionBase,System.Boolean)">
             <summary>
             Loads member fields from persistent storage
@@ -2962,6 +3506,15 @@
             <param name="graphDepthToLoad">Max graph depth to load fields for</param>
             <param name="session">The active session</param>
             <param name="primitivesOnly">If true, load only primitive values</param>
+        </member>
+        <member name="M:VelocityDb.TypeInfo.TypeVersion.ObjectBytesFromStrings(System.String[],System.String[],VelocityDb.Session.SessionBase,VelocityDb.TypeInfo.Schema)">
+            <summary>
+            Converts string representation of an object into VelocityDB object byte representation.
+            </summary>
+            <param name="members"></param>
+            <param name="fieldNames"></param>
+            <param name="session">Active session</param>
+            <param name="schema">Current schema</param>
         </member>
         <member name="P:VelocityDb.TypeInfo.TypeVersion.DataMemberArray">
             <summary>
@@ -3056,6 +3609,9 @@
             <summary>
             Contains persistent info for a <see cref="P:VelocityDb.TypeInfo.VelocityDbType.Type"/>
             </summary>
+        </member>
+        <member name="M:VelocityDb.TypeInfo.VelocityDbType.ReadMe(VelocityDb.TypeInfo.TypeVersion,System.Byte[],System.Int32@,VelocityDb.Session.SessionBase,VelocityDb.Page,System.Boolean,VelocityDb.TypeInfo.Schema,System.Boolean,System.Collections.Generic.List{VelocityDb.IOptimizedPersistable},System.Int32,System.Int32,System.Boolean)">
+            <inheritdoc />
         </member>
         <member name="P:VelocityDb.TypeInfo.VelocityDbType.AllowOtherTypesOnSamePage">
             <inheritdoc />
@@ -3867,12 +4423,6 @@
             Object maintains a list of pages accessed by a session, pages are removed from the list when there is not enough memory available. This makes such pages eligible for garbage collection while in list pages are prevented from being garbage collected.
             </summary>
         </member>
-        <member name="P:VelocityDb.DataCache.UnauthorizedPerformanceCounter">
-            <summary>
-            Web server process isn't by default permitted to use PerformanceCounter
-            See: http://blogs.msdn.com/b/bclteam/archive/2006/09/08/746900.aspx
-            </summary>
-        </member>
         <member name="P:VelocityDb.DataCache.MaximumMemoryUse">
             <summary>
             Maximum number of bytes to allow for this Process (reduces cached objects and pages when memory allocated reaches this soft limit)
@@ -4449,6 +4999,7 @@
             <summary>
             Constructs this enumeration wrapper object
             </summary>
+            <param name="type">The <see cref="T:System.Type"/> to look for.</param>
             <param name="db">The active db</param>
             <param name="includeSubClasses">Also return instances of sub classes</param>
         </member>
@@ -4470,6 +5021,7 @@
             <param name="index">the item index</param>
             <param name="allObjects">object of type collection</param>
             <param name="atIndex">index reached within this database</param>
+            <param name="reset"></param>
             <returns>the item at the specified index</returns>
         </member>
         <member name="T:VelocityDb.OfTypeExtension">
@@ -4814,8 +5366,9 @@
         </member>
         <member name="M:VelocityDb.OptimizedPersistable.Equals(System.Object)">
             <summary>
-            Determines whether the specified Object is equal to the current Object.
+            Determines whether the specified Object is equal to the current Object. If this object or other object isn't persistent we call <see cref="M:System.Object.Equals(System.Object)"/>
             </summary>
+            <param name="obj">Object to compare with</param>
             <value>true if the specified Object is equal to the current Object; otherwise, false.</value>
         </member>
         <member name="P:VelocityDb.OptimizedPersistable.DatabaseNumber">
@@ -5184,6 +5737,9 @@
             <param name="str">a string to convert</param>
             <returns>a UTF8 encoding</returns>
         </member>
+        <member name="M:VelocityDb.Page.Dispose">
+            <inheritdoc />
+        </member>
         <member name="M:VelocityDb.Page.CompareTo(VelocityDb.Page)">
             <summary>
             Compares Pages by PageNumber
@@ -5424,8 +5980,8 @@
         <member name="T:VelocityDb.Session.SessionBase">
             <summary>
             Transaction control, database creation and special persistent object api.
-            Each session can use 4,294,967,295 <see cref="T:VelocityDb.Database"/>s. Each <see cref="T:VelocityDb.Database"/> may have up to 65,535 <see cref="T:VelocityDb.Page"/>s and a page can be up to 4,294,967,295 bytes in size.
-            The maximum data size a single session can manage is: 4,294,967,295 * 65,535 * 4,294,967,295 = 1208907372307614101733375 bytes or about a Yottabyte http://en.wikipedia.org/wiki/Yottabyte
+            Each session can use 4,294,967,295 <see cref="T:VelocityDb.Database"/>s. Each <see cref="T:VelocityDb.Database"/> may have up to 65,535 <see cref="T:VelocityDb.Page"/>s and a page can be up to 2 GB in size (.Net restriction of a byte array).
+            The maximum data size a single session can manage is: 4,294,967,295 * 65,535 * 2147483648 = 604453686294542391705600 bytes or about half a Yottabyte http://en.wikipedia.org/wiki/Yottabyte
             </summary>
         </member>
         <member name="F:VelocityDb.Session.SessionBase.s_typeDatabaseIdOffsetFromTypeShortId">
@@ -5552,17 +6108,17 @@
         </member>
         <member name="P:VelocityDb.Session.SessionBase.MinStringLengthToIntern">
             <summary>
-            Get the minimum size a string must have before VelocityDB internals interns, <see cref="!:string.Intern"/>, string when read from a <see cref="T:VelocityDb.Database"/>.
+            Get the minimum size a string must have before VelocityDB internals interns, <see cref="M:System.String.Intern(System.String)"/>, string when read from a <see cref="T:VelocityDb.Database"/>.
             </summary>
         </member>
         <member name="P:VelocityDb.Session.SessionBase.MaxStringLengthToIntern">
             <summary>
-            Get the maximum size a string must have before VelocityDB internals interns, <see cref="!:string.Intern"/>, string when read from a <see cref="T:VelocityDb.Database"/>.
+            Get the maximum size a string must have before VelocityDB internals interns, <see cref="M:System.String.Intern(System.String)"/>, string when read from a <see cref="T:VelocityDb.Database"/>.
             </summary>
         </member>
         <member name="M:VelocityDb.Session.SessionBase.SetMinMaxStringIntern(System.UInt16,System.UInt16)">
             <summary>
-            A persistent string read into memory from a <see cref="T:VelocityDb.Database"/> is interned using <see cref="!:string.Intern"/> to speed up comparisons and conserve memory (when the same string occurs in many places)
+            A persistent string read into memory from a <see cref="T:VelocityDb.Database"/> is interned using <see cref="M:System.String.Intern(System.String)"/> to speed up comparisons and conserve memory (when the same string occurs in many places)
             </summary>
             <param name="minSize">Selected minimum plus one string length of a string to be interned</param>
             <param name="maxSize">Selected maximum string length for a string to be interned</param>
@@ -6394,7 +6950,7 @@
             <summary>
             Gets the current database to try
             </summary>
-            <param name="session">the active session</param>
+            <param name="place">the placement object to retrieve from</param>
             <returns>A database or null if not cached</returns>
         </member>
         <member name="P:VelocityDb.Session.SessionBase.UseExternalStorageApi">
@@ -6543,7 +7099,7 @@
         </member>
         <member name="M:VelocityDb.Session.SessionNoServer.#ctor(System.String,System.Int32,System.Boolean,System.Boolean,VelocityDb.CacheEnum)">
             <summary>
-            Creates a new session. For a thread safe version of this class, use <see cref="!:SessionNoServerShared"/>
+            Creates a new session. For a thread safe version of this class, use <see cref="T:VelocityDb.Session.SessionNoServerShared"/>
             </summary>
             <param name="systemDir">The startup location directory path. Path can be an absolute (full) path or a path relative to <see cref="F:VelocityDb.Session.SessionBase.s_baseDatabasePath"/></param>
             <param name="waitForLockMilliseconds">The desired maximum lock wait time</param>
@@ -6570,6 +7126,243 @@
             </summary>
             <param name="db">The database to update</param>
             <returns>true if Database was updated, otherwise throws an exception</returns>
+        </member>
+        <member name="T:VelocityDb.Session.SessionNoServerShared">
+            <summary>
+            Same as SessionNoServer but SessionNoServerShared is thread safe so it can be shared between threads.
+            </summary>
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.#ctor(System.String,System.Int32,System.Boolean,System.Boolean,VelocityDb.CacheEnum)">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.Abort">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.ActualFlushPage(VelocityDb.Page,System.Boolean,System.IO.Stream,System.Collections.Generic.Dictionary{System.UInt16,System.Int64})">
+            <inheritdoc />
+        </member>
+        <member name="P:VelocityDb.Session.SessionNoServerShared.AddToIndexInSeperateThread">
+            <summary>
+            Allow adding objects to indices to be done in a worker thread instead of in main thread.
+            </summary>
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.BeginRead(System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.BeginUpdate(System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.CachedPage(VelocityDb.Database,System.UInt16)">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.ClearCache">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.ClearCashedPages">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.ClearPageCache">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.CrossTransactionCache(VelocityDb.Database,System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.Commit(System.Boolean,System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.Compact">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.Compact(VelocityDb.Database)">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.CopyAllDatabasesTo(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.CopyDatabaseTo(VelocityDb.Database,VelocityDb.Database)">
+            <inheritdoc />
+        </member>
+        <member name="P:VelocityDb.Session.SessionNoServerShared.Databases">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.DeleteDatabase(VelocityDb.Database,System.Collections.Generic.SortedSet{VelocityDb.Database})">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.DeleteLocation(VelocityDb.DatabaseLocation,System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.DeletePage(VelocityDb.Database,VelocityDb.Page,System.Collections.Generic.Dictionary{System.UInt16,System.Int64},System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.deleteFromIndexes(VelocityDb.IOptimizedPersistable,VelocityDb.TypeInfo.TypeVersion,VelocityDb.TypeInfo.TypeVersion)">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.ExclusiveLockDatabase(System.UInt32)">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.licenseCheck">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.LoadMembers(VelocityDb.IOptimizedPersistable,VelocityDb.TypeInfo.Schema,VelocityDb.Page,System.UInt16,System.Int32,System.Byte[],System.Collections.Generic.List{VelocityDb.IOptimizedPersistable},System.Int32,System.Int32,VelocityDb.TypeInfo.TypeVersion,System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.FileOpen(VelocityDb.Database,System.IO.FileAccess,System.String@,System.IO.FileMode,System.Boolean,System.Int32,System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.FlushPage(VelocityDb.Page,System.Collections.Generic.Dictionary{System.UInt16,System.Int64},VelocityDb.Internal.DatabaseUpdatedPages,System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.FlushPageOf(VelocityDb.OptimizedPersistable)">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.FlushUpdates">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.FlushUpdates(System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.FlushUpdates(VelocityDb.Database,VelocityDb.Internal.DatabaseUpdatedPages,System.Boolean@,System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.ForceDatabaseCacheValidation">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.GlobalObjWrapperGet(System.Object,VelocityDb.IOptimizedPersistable@)">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.GlobalObjWrapperAdd(System.Object,VelocityDb.IOptimizedPersistable)">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.getLocalPage(VelocityDb.Database,System.Collections.Generic.Dictionary{System.UInt16,System.Int64},System.UInt16,System.Boolean,System.Boolean,System.Boolean,System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.getLocalNextPage(VelocityDb.Placement,System.UInt16,System.UInt32,System.Boolean,System.Boolean,System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.GetNextPage(System.UInt32@,System.UInt16@,System.Boolean,System.Int32,System.Boolean,System.Boolean,System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.getPage(VelocityDb.Database,System.Collections.Generic.Dictionary{System.UInt16,System.Int64},System.UInt16,System.Boolean,System.Boolean,System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.ReOpenDatabaseLocations">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.RestoreFrom(VelocityDb.DatabaseLocation,System.DateTime)">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.optimisticLockingValidate(VelocityDb.Database,VelocityDb.TypeInfo.Schema,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.OpenDatabase(System.UInt32,System.Boolean,System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.openLocalDatabase(System.UInt32,System.Boolean,VelocityDb.TypeInfo.Schema,System.Boolean,VelocityDb.DatabaseLocations,System.Boolean@,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.OpenAllDatabases(System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.OpenLocationDatabases(VelocityDb.DatabaseLocation,System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.OpenDatabase(System.UInt32,System.Boolean,VelocityDb.TypeInfo.Schema,System.Boolean,System.Boolean@,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.Persist(VelocityDb.Placement,VelocityDb.IOptimizedPersistable,VelocityDb.TypeInfo.Schema,System.UInt16,System.Boolean,System.Collections.Generic.Queue{VelocityDb.IOptimizedPersistable})">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.Persist(VelocityDb.IOptimizedPersistable,System.Nullable{System.UInt16})">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.PossiblyFlushUpdatedPages(System.UInt32)">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.SubscribeToChanges(System.Type,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.UpdateDatabase(VelocityDb.Database)">
+            <inheritdoc />
+        </member>
+        <member name="P:VelocityDb.Session.SessionNoServerShared.WriteToDiskInSeperateDatabaseThreads">
+            <summary>
+            Allow object serialization and page writes to happen in worker threads, one per database, instead of in main session thread.
+            <see cref="P:VelocityDb.Session.SessionNoServerShared.AddToIndexInSeperateThread"/> must also be enabled for this to work.
+            </summary>
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.Unpersist(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.Unstubify(VelocityDb.Page,System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.UpdateObject(VelocityDb.IOptimizedPersistable,System.Boolean,System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.UpdateObject(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.OpenSchema(System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.NewDatabase(System.UInt32,System.UInt32,System.String,System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.NewLocation(VelocityDb.DatabaseLocation)">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.Open(VelocityDb.Database,System.UInt64,System.Boolean,System.Collections.Generic.List{VelocityDb.IOptimizedPersistable},System.Boolean,System.Int32,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.Open(System.UInt32,System.UInt16,System.UInt16,System.Boolean,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.Open(System.UInt64,System.Boolean,System.Boolean,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.Open(VelocityDb.Database,System.UInt64,System.Boolean,System.Collections.Generic.List{VelocityDb.IOptimizedPersistable},System.Boolean,System.Int32,System.Int32,System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Session.SessionNoServerShared.Verify">
+            <inheritdoc />
+        </member>
+        <member name="T:VelocityDb.Session.SessionPool">
+            <summary>
+            Provides a pool of sessions for reuse instead of creating new session instances every time a session is needed.
+            The pooled sessions includes cached databases, pages and objects.
+            Keep the pool size to a minimum too avoid excessive memory usage.
+            </summary>
+        </member>
+        <member name="M:VelocityDb.Session.SessionPool.#ctor(System.Int32,System.Func{VelocityDb.Session.SessionBase})">
+            <summary>
+            Creates a session pool, store this pool somewhere where tour application threads can get to it. 
+            </summary>
+            <param name="poolSize">The maximum number of session maintained in the pool</param>
+            <param name="createSessionFunc">A function provided by you that creates a session of your choice with your choice of parameters. Could be something as simple as: () => new SessionNoServer("MyDbDir")</param>
+        </member>
+        <member name="M:VelocityDb.Session.SessionPool.Dispose">
+            <summary>
+            Disposes all sessions in this pool
+            </summary>
+        </member>
+        <member name="M:VelocityDb.Session.SessionPool.Dispose(System.Boolean)">
+            <summary>
+            Aborts and active sessions and closes any network streams.
+            </summary>
+        </member>
+        <member name="M:VelocityDb.Session.SessionPool.GetSession(System.Int32@)">
+            <summary>
+            Get a session locked for use by caller.
+            </summary>
+            <param name="identifier">The id of the returned session. Make sure you always call FreeSession with this id provided or else session is locked forever. One way is to call FreeSession in a finally block.</param>
+            <returns>A reserved/locked session</returns>
+        </member>
+        <member name="M:VelocityDb.Session.SessionPool.FreeSession(System.Int32,VelocityDb.Session.SessionBase)">
+            <summary>
+            Always call this function so that your session is unlocked and becomes available to others
+            </summary>
+            <param name="identifier">The identifier provided by <see cref="M:VelocityDb.Session.SessionPool.GetSession(System.Int32@)"/></param>
+            <param name="session">The session provided by <see cref="M:VelocityDb.Session.SessionPool.GetSession(System.Int32@)"/></param>
         </member>
         <member name="T:VelocityDb.Sync.Change">
             <summary>
@@ -6607,6 +7400,16 @@
             Version of page being updated
             </summary>
         </member>
+        <member name="T:VelocityDb.Sync.Changes">
+            <summary>
+            Keeps track of changes within a set of databases (a federation). Preliminary version.
+            </summary>
+        </member>
+        <member name="P:VelocityDb.Sync.Changes.ChangeList">
+            <summary>
+            A list of <see cref="T:VelocityDb.Sync.TransactionChanges"/> made to the federation
+            </summary>
+        </member>
         <member name="M:VelocityDb.Sync.Changes.Unpersist(VelocityDb.Session.SessionBase)">
             <inheritdoc />
         </member>
@@ -6640,6 +7443,21 @@
         <member name="P:VelocityDb.Sync.ReplicaSync.TransactionNumber">
             <summary>
             Last transaction number synced with
+            </summary>
+        </member>
+        <member name="T:VelocityDb.Sync.TransactionChanges">
+            <summary>
+            A log of all changes made within a certain transaction.
+            </summary>
+        </member>
+        <member name="P:VelocityDb.Sync.TransactionChanges.ChangeList">
+            <summary>
+            List of changes made
+            </summary>
+        </member>
+        <member name="P:VelocityDb.Sync.TransactionChanges.TransactionNumber">
+            <summary>
+            Transaction id for these changes.
             </summary>
         </member>
         <member name="M:VelocityDb.Sync.TransactionChanges.Unpersist(VelocityDb.Session.SessionBase)">

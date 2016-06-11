@@ -74,6 +74,15 @@
             <param name="index">The index requested</param>
             <returns>Element at requested index</returns>
         </member>
+        <member name="M:VelocityDb.AllObjectsExtension.Skip``1(VelocityDb.AllObjects{``0},System.Int32)">
+            <summary>
+            Bypasses a specified number of elements in a sequence and then returns the remaining elements. Overrides <see cref="M:System.Linq.Enumerable.Skip``1(System.Collections.Generic.IEnumerable{``0},System.Int32)"/> for improved performance
+            </summary>
+            <typeparam name="TSource">The type of the elements of source</typeparam>
+            <param name="source">Source collection</param>
+            <param name="count">The number of elements to skip before returning the remaining elements.</param>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/>that contains the elements that occur after the specified index in the input sequence.</returns>
+        </member>
         <member name="T:VelocityDb.AlreadyInCommitException">
             <summary>
             Exception thrown when attempting to commit a transaction when we already are within transaction commit code.
@@ -132,6 +141,16 @@
             Version of page being updated
             </summary>
         </member>
+        <member name="T:VelocityDb.Sync.Changes">
+            <summary>
+            Keeps track of changes within a set of databases (a federation). Preliminary version.
+            </summary>
+        </member>
+        <member name="P:VelocityDb.Sync.Changes.ChangeList">
+            <summary>
+            A list of <see cref="T:VelocityDb.Sync.TransactionChanges"/> made to the federation
+            </summary>
+        </member>
         <member name="M:VelocityDb.Sync.Changes.Unpersist(VelocityDb.Session.SessionBase)">
             <inheritdoc />
         </member>
@@ -165,6 +184,21 @@
         <member name="P:VelocityDb.Sync.ReplicaSync.TransactionNumber">
             <summary>
             Last transaction number synced with
+            </summary>
+        </member>
+        <member name="T:VelocityDb.Sync.TransactionChanges">
+            <summary>
+            A log of all changes made within a certain transaction.
+            </summary>
+        </member>
+        <member name="P:VelocityDb.Sync.TransactionChanges.ChangeList">
+            <summary>
+            List of changes made
+            </summary>
+        </member>
+        <member name="P:VelocityDb.Sync.TransactionChanges.TransactionNumber">
+            <summary>
+            Transaction id for these changes.
             </summary>
         </member>
         <member name="M:VelocityDb.Sync.TransactionChanges.Unpersist(VelocityDb.Session.SessionBase)">
@@ -242,6 +276,13 @@
             <summary>
             Info about a data Field of a persistent object
             </summary>
+        </member>
+        <member name="M:VelocityDb.TypeInfo.DataMember.Equals(VelocityDb.TypeInfo.DataMember)">
+            <summary>
+            Determines whether two <see cref="T:VelocityDb.TypeInfo.DataMember"/> instances are equal.
+            </summary>
+            <param name="other">The object to compare with the current object.</param>
+            <returns><c>true</c> if the specified <see cref="T:VelocityDb.TypeInfo.DataMember"/> is equal to the current <see cref="T:VelocityDb.TypeInfo.DataMember"/>; otherwise, <c>false</c>.</returns>
         </member>
         <member name="M:VelocityDb.TypeInfo.DataMember.GetMemberValue(System.Object)">
             <summary>
@@ -337,6 +378,16 @@
             <param name="offset"></param>
             <returns></returns>
         </member>
+        <member name="P:VelocityDb.TypeInfo.DataMember.IsGuid">
+            <summary>
+            <c>true</c> if field is of type <see cref="T:System.Guid"/>
+            </summary>
+        </member>
+        <member name="P:VelocityDb.TypeInfo.DataMember.IsInterface">
+            <summary>
+            <c>true</c> if field is if type interface
+            </summary>
+        </member>
         <member name="M:VelocityDb.TypeInfo.DataMember.GetTypeFromAnyAssemblyVersion(System.String)">
             <summary>
             Load type using <see cref="M:System.Type.GetType(System.String)"/>, and if fails, 
@@ -403,6 +454,13 @@
             Do cache CacheEnum.Yes
             </summary>
         </member>
+        <member name="M:VelocityDb.TypeInfo.Schema.IsInternalType(System.UInt16)">
+            <summary>
+            Determine if a given slot is within the range of slots containing the build in/pre registered types
+            </summary>
+            <param name="slotNumber">Slot number to check</param>
+            <returns><c>true</c> if slot is within the range of build in types; otherwise <c>false</c></returns>
+        </member>
         <member name="M:VelocityDb.TypeInfo.Schema.GetTypeVersion(System.UInt32,VelocityDb.Session.SessionBase,System.Boolean)">
             <summary>
             Opens a <see cref="T:VelocityDb.TypeInfo.TypeVersion"/> object
@@ -426,6 +484,31 @@
             Contains info about a version of a <see cref="P:VelocityDb.TypeInfo.TypeVersion.VelocityDbType"/>. The info is used when reading/writing an object of the 
             </summary>
         </member>
+        <member name="P:VelocityDb.TypeInfo.TypeVersion.AllowOtherTypesOnSamePage">
+            <inheritdoc />
+        </member>
+        <member name="P:VelocityDb.TypeInfo.TypeVersion.BaseShape">
+            <summary>
+            Get the base <see cref="T:VelocityDb.TypeInfo.TypeVersion"/> or null if none exist
+            </summary>
+        </member>
+        <member name="P:VelocityDb.TypeInfo.TypeVersion.Cache">
+            <inheritdoc />
+        </member>
+        <member name="P:VelocityDb.TypeInfo.TypeVersion.CountStart">
+            <summary>
+            Set where <see cref="P:VelocityDb.TypeInfo.TypeVersion.AutoIncrement"/> counter should start
+            </summary>
+        </member>
+        <member name="M:VelocityDb.TypeInfo.TypeVersion.Equals(VelocityDb.TypeInfo.TypeVersion)">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.TypeInfo.TypeVersion.GetDataMemberList">
+            <summary>
+            Get a list of all <see cref="T:VelocityDb.TypeInfo.DataMember"/> of this type including base classes.
+            </summary>
+            <returns>A list of <see cref="T:VelocityDb.TypeInfo.DataMember"/> that this type or a base class contains</returns>
+        </member>
         <member name="M:VelocityDb.TypeInfo.TypeVersion.LoadMembers(VelocityDb.IOptimizedPersistable,VelocityDb.TypeInfo.Schema,System.Collections.Generic.List{VelocityDb.IOptimizedPersistable},System.Int32,System.Int32,VelocityDb.Session.SessionBase,System.Boolean)">
             <summary>
             Loads member fields from persistent storage
@@ -437,6 +520,15 @@
             <param name="graphDepthToLoad">Max graph depth to load fields for</param>
             <param name="session">The active session</param>
             <param name="primitivesOnly">If true, load only primitive values</param>
+        </member>
+        <member name="M:VelocityDb.TypeInfo.TypeVersion.ObjectBytesFromStrings(System.String[],System.String[],VelocityDb.Session.SessionBase,VelocityDb.TypeInfo.Schema)">
+            <summary>
+            Converts string representation of an object into VelocityDB object byte representation.
+            </summary>
+            <param name="members"></param>
+            <param name="fieldNames"></param>
+            <param name="session">Active session</param>
+            <param name="schema">Current schema</param>
         </member>
         <member name="P:VelocityDb.TypeInfo.TypeVersion.DataMemberArray">
             <summary>
@@ -531,6 +623,9 @@
             <summary>
             Contains persistent info for a <see cref="P:VelocityDb.TypeInfo.VelocityDbType.Type"/>
             </summary>
+        </member>
+        <member name="M:VelocityDb.TypeInfo.VelocityDbType.ReadMe(VelocityDb.TypeInfo.TypeVersion,System.Byte[],System.Int32@,VelocityDb.Session.SessionBase,VelocityDb.Page,System.Boolean,VelocityDb.TypeInfo.Schema,System.Boolean,System.Collections.Generic.List{VelocityDb.IOptimizedPersistable},System.Int32,System.Int32,System.Boolean)">
+            <inheritdoc />
         </member>
         <member name="P:VelocityDb.TypeInfo.VelocityDbType.AllowOtherTypesOnSamePage">
             <inheritdoc />
@@ -1375,6 +1470,9 @@
             Wrapper object for a byte[] of data for comparing objects within a BTreeSet. Wrapper is used so that this data can be placed on a seperate <see cref="T:VelocityDb.Page"/>
             </summary>
         </member>
+        <member name="M:VelocityDb.Collection.BTree.BTreeByteArray.ReadMe(VelocityDb.TypeInfo.TypeVersion,System.Byte[],System.Int32@,VelocityDb.Session.SessionBase,VelocityDb.Page,System.Boolean,VelocityDb.TypeInfo.Schema,System.Boolean,System.Collections.Generic.List{VelocityDb.IOptimizedPersistable},System.Int32,System.Int32,System.Boolean)">
+            <inheritdoc />
+        </member>
         <member name="P:VelocityDb.Collection.BTree.BTreeByteArray.Cache">
             <summary>
             We do want to cache this kind of object since they are likely to be frequently used.
@@ -1420,10 +1518,38 @@
         <member name="M:VelocityDb.Collection.BTree.BTreeInternalBase`2.Persist(VelocityDb.Placement,VelocityDb.Session.SessionBase,System.Boolean,System.Boolean,System.Collections.Generic.Queue{VelocityDb.IOptimizedPersistable})">
             <inheritdoc />
         </member>
+        <member name="P:VelocityDb.Collection.BTree.BTreeLeafBase`2.Cache">
+            <inheritdoc />
+        </member>
+        <member name="P:VelocityDb.Collection.BTree.BTreeLeafBase`2.Keys">
+            <summary>
+            Gets the keys for this leaf node
+            </summary>
+        </member>
+        <member name="P:VelocityDb.Collection.BTree.BTreeLeafBase`2.Values">
+            <summary>
+            Gets the values for this leaf node
+            </summary>
+        </member>
+        <member name="P:VelocityDb.Collection.BTree.BTreeLeafBase`2.KeysCount">
+            <summary>
+            Get the number of keys that are in use for this leaf node.
+            </summary>
+        </member>
         <member name="P:VelocityDb.Collection.BTree.BTreeLeafBase`2.FlushIfPageFull">
             <summary>
             We don't want to flush other BTreeLeaf pages while looking for a placement page
             </summary>
+        </member>
+        <member name="M:VelocityDb.Collection.BTree.BTreeLeafBase`2.GetKey(System.Int32)">
+            <summary>
+            Get a key at a given index
+            </summary>
+            <param name="index">index of Key to get</param>
+            <returns>A key</returns>
+        </member>
+        <member name="P:VelocityDb.Collection.BTree.BTreeLeafOidShort`2.Keys">
+            <inheritdoc />
         </member>
         <member name="T:VelocityDb.Collection.BTree.BTreeMap`2">
             <summary>
@@ -3359,6 +3485,14 @@
             </summary>
             <returns>The value at the last position in the list</returns>
         </member>
+        <member name="M:VelocityDb.Collection.SortedWeakRefSet.TryGetValue(System.Object,VelocityDb.OptimizedPersistable@)">
+            <summary>
+            Gets the value associated with the specified key.
+            </summary>
+            <param name="key">The key of the value to get.</param>
+            <param name="value">When this method returns, contains the value associated with the specified key, if the key is found; otherwise, the default value for the type of the value parameter. This parameter is passed uninitialized.</param>
+            <returns><c>true</c> if this contains an element with the specified key; otherwise, <c>false</c>.</returns>
+        </member>
         <member name="T:VelocityDb.Collection.SortedMap`2">
             <summary>
             A sorted map
@@ -3550,6 +3684,7 @@
             <summary>
             Constructs this enumeration wrapper object
             </summary>
+            <param name="type">The <see cref="T:System.Type"/> to look for.</param>
             <param name="db">The active db</param>
             <param name="includeSubClasses">Also return instances of sub classes</param>
         </member>
@@ -3571,6 +3706,7 @@
             <param name="index">the item index</param>
             <param name="allObjects">object of type collection</param>
             <param name="atIndex">index reached within this database</param>
+            <param name="reset"></param>
             <returns>the item at the specified index</returns>
         </member>
         <member name="T:VelocityDb.OfTypeExtension">
@@ -3662,6 +3798,15 @@
             <param name="other">Other <see cref="T:VelocityDb.Database"/> object</param>
             <returns><c>true</c> if matching; otherwise <c>false</c></returns>
         </member>
+        <member name="M:VelocityDb.Database.Equals(VelocityDb.Database,VelocityDb.Database)">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Database.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="M:VelocityDb.Database.GetHashCode(VelocityDb.Database)">
+            <inheritdoc />
+        </member>
         <member name="P:VelocityDb.Database.FileInfo">
             <summary>
             <see cref="T:System.IO.FileInfo"/> for this <see cref="T:VelocityDb.Database"/>, not set for ServerClientSession
@@ -3703,6 +3848,9 @@
             <summary>
              Indicates if database was created in the current transactionNumber 
             </summary>
+        </member>
+        <member name="P:VelocityDb.Database.IsUpdated">
+            <inheritdoc />
         </member>
         <member name="P:VelocityDb.Database.Name">
             <summary>
@@ -4552,12 +4700,6 @@
             Object maintains a list of pages accessed by a session, pages are removed from the list when there is not enough memory available. This makes such pages eligible for garbage collection while in list pages are prevented from being garbage collected.
             </summary>
         </member>
-        <member name="P:VelocityDb.DataCache.UnauthorizedPerformanceCounter">
-            <summary>
-            Web server process isn't by default permitted to use PerformanceCounter
-            See: http://blogs.msdn.com/b/bclteam/archive/2006/09/08/746900.aspx
-            </summary>
-        </member>
         <member name="P:VelocityDb.DataCache.MaximumMemoryUse">
             <summary>
             Maximum number of bytes to allow for this Process (reduces cached objects and pages when memory allocated reaches this soft limit)
@@ -4906,6 +5048,9 @@
             <param name="doRecoveryCheck">Set to false if you want to avoid a recovery check. (not recommended to disable recovery check)</param>
             <param name="isRestore">Set to true if this is a commit of a database restore</param>
         </member>
+        <member name="M:VelocityDb.Session.ServerClientSession.Compact(VelocityDb.Database)">
+            <inheritdoc />
+        </member>
         <member name="M:VelocityDb.Session.ServerClientSession.CopyAllDatabasesTo(System.String)">
             <summary>
             Copies all databases to a selected directory on the local host.
@@ -4972,13 +5117,7 @@
             <returns>A List of Oid</returns>
         </member>
         <member name="M:VelocityDb.Session.ServerClientSession.NewDatabase(System.UInt32,System.UInt32,System.String,System.Boolean)">
-            <summary>
-            Create a new Database with a given database number
-            </summary>
-            <param name="dbNum">Database number of the database to create</param>
-            <param name="megaBytesPresize">Optional presize of Datafile in MB</param>
-            <param name="name">Optional name of the database to create</param>
-            <returns>The newly created Database or throws and exception if the Database already exist</returns>
+            <inheritdoc />
         </member>
         <member name="M:VelocityDb.Session.ServerClientSession.NewLocation(VelocityDb.DatabaseLocation)">
             <summary>
@@ -4995,6 +5134,9 @@
             <param name="update">Open the Database for update?</param>
             <param name="signalError">Signal errors if errors found when opening the Database?</param>
             <returns>The opened Database</returns>
+        </member>
+        <member name="M:VelocityDb.Session.ServerClientSession.reopenDatabaseForUpdate(VelocityDb.Database,VelocityDb.TypeInfo.Schema,System.Boolean@,System.Boolean)">
+            <inheritdoc />
         </member>
         <member name="M:VelocityDb.Session.ServerClientSession.RestoreFrom(VelocityDb.DatabaseLocation,System.DateTime)">
             <summary>
@@ -5020,8 +5162,8 @@
         <member name="T:VelocityDb.Session.SessionBase">
             <summary>
             Transaction control, database creation and special persistent object api.
-            Each session can use 4,294,967,295 <see cref="T:VelocityDb.Database"/>s. Each <see cref="T:VelocityDb.Database"/> may have up to 65,535 <see cref="T:VelocityDb.Page"/>s and a page can be up to 4,294,967,295 bytes in size.
-            The maximum data size a single session can manage is: 4,294,967,295 * 65,535 * 4,294,967,295 = 1208907372307614101733375 bytes or about a Yottabyte http://en.wikipedia.org/wiki/Yottabyte
+            Each session can use 4,294,967,295 <see cref="T:VelocityDb.Database"/>s. Each <see cref="T:VelocityDb.Database"/> may have up to 65,535 <see cref="T:VelocityDb.Page"/>s and a page can be up to 2 GB in size (.Net restriction of a byte array).
+            The maximum data size a single session can manage is: 4,294,967,295 * 65,535 * 2147483648 = 604453686294542391705600 bytes or about half a Yottabyte http://en.wikipedia.org/wiki/Yottabyte
             </summary>
         </member>
         <member name="F:VelocityDb.Session.SessionBase.s_typeDatabaseIdOffsetFromTypeShortId">
@@ -5990,7 +6132,7 @@
             <summary>
             Gets the current database to try
             </summary>
-            <param name="session">the active session</param>
+            <param name="place">the placement object to retrieve from</param>
             <returns>A database or null if not cached</returns>
         </member>
         <member name="P:VelocityDb.Session.SessionBase.UseExternalStorageApi">
@@ -6661,6 +6803,9 @@
             <param name="str">a string to convert</param>
             <returns>a UTF8 encoding</returns>
         </member>
+        <member name="M:VelocityDb.Page.Dispose">
+            <inheritdoc />
+        </member>
         <member name="M:VelocityDb.Page.CompareTo(VelocityDb.Page)">
             <summary>
             Compares Pages by PageNumber
@@ -6778,8 +6923,9 @@
         </member>
         <member name="M:VelocityDb.OptimizedPersistable.Equals(System.Object)">
             <summary>
-            Determines whether the specified Object is equal to the current Object.
+            Determines whether the specified Object is equal to the current Object. If this object or other object isn't persistent we call <see cref="M:System.Object.Equals(System.Object)"/>
             </summary>
+            <param name="obj">Object to compare with</param>
             <value>true if the specified Object is equal to the current Object; otherwise, false.</value>
         </member>
         <member name="P:VelocityDb.OptimizedPersistable.DatabaseNumber">
@@ -7308,6 +7454,14 @@
             <summary>
             Always false
             </summary>
+        </member>
+        <member name="M:VelocityDB.Server.WeakReferenceSet`1.TryGetValue(`0,`0@)">
+            <summary>
+            Gets the value associated with the specified key.
+            </summary>
+            <param name="key">The key of the value to get.</param>
+            <param name="value">When this method returns, contains the value associated with the specified key, if the key is found; otherwise, the default value for the type of the value parameter. This parameter is passed uninitialized.</param>
+            <returns><c>true</c> if this contains an element with the specified key; otherwise, <c>false</c>.</returns>
         </member>
         <member name="M:VelocityDB.Server.FederationServer.RequestsLoop">
             <summary>
@@ -9033,6 +9187,9 @@
             Write threads not yet available with <see cref="T:VelocityDB.Server.ServerClient"/>.
             </summary>
         </member>
+        <member name="M:VelocityDB.Server.ServerClient.NewDatabase(System.UInt32,System.UInt32,System.String,System.Boolean)">
+            <inheritdoc />
+        </member>
         <member name="P:VelocityDB.Server.ServerSession.AddToIndexInSeperateThread">
             <summary>
             Indexing thread not yet available with <see cref="T:VelocityDB.Server.ServerSession"/>.
@@ -9055,6 +9212,9 @@
             <summary>
             Indicates if we are within an active transaction.
             </summary>
+        </member>
+        <member name="M:VelocityDB.Server.ServerSlaveSession.NewDatabase(System.UInt32,System.UInt32,System.String,System.Boolean)">
+            <inheritdoc />
         </member>
         <member name="T:VelocityDB.LZ4n.LZ4Codec">
             <summary>Unsafe LZ4 codec.</summary>

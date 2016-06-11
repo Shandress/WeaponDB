@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>WeaponDB</RootNamespace>
     <AssemblyName>WeaponDB</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -31,16 +32,22 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>WeaponDB.Program</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="HtmlAgilityPack">
-      <HintPath>E:\Documents\Visual Studio 2013\Projects\MorningPaperRepo\MornigPaper\MornigPaper\bin\Debug\HtmlAgilityPack.dll</HintPath>
+    <Reference Include="HtmlAgilityPack, Version=1.4.6.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Documents\Visual Studio 2013\Projects\MorningPaperRepo\MornigPaper\MornigPaper\bin\Debug\HtmlAgilityPack.dll</HintPath>
     </Reference>
-    <Reference Include="itextsharp">
-      <HintPath>E:\Documents\Visual Studio 2013\Projects\MorningPaperRepo\MornigPaper\MornigPaper\bin\Debug\itextsharp.dll</HintPath>
+    <Reference Include="Iesi.Collections">
+      <HintPath>..\packages\Iesi.Collections.4.0.0.4000\lib\net40\Iesi.Collections.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.QualityTools.Testing.Fakes, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -49,14 +56,22 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="VelocityDb, Version=5.3.15.0, Culture=neutral, PublicKeyToken=f050dff7995aa24a, processorArchitecture=MSIL">
+    <Reference Include="VelocityDb, Version=5.3.17.0, Culture=neutral, PublicKeyToken=f050dff7995aa24a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\VelocityDB.5.3.15\lib\net40\VelocityDb.dll</HintPath>
+      <HintPath>..\..\..\..\VelocityDB\VelocityDb.dll</HintPath>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="Wintellect.Sterling.Server">
+      <HintPath>..\packages\Sterling.1.6.2\lib\net40\Wintellect.Sterling.Server.dll</HintPath>
+    </Reference>
+    <Reference Include="Wintellect.Sterling.Server.FileSystem">
+      <HintPath>..\packages\Sterling.1.6.2\lib\net40\Wintellect.Sterling.Server.FileSystem.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\Constants.cs" />
     <Compile Include="Data\Weapon stuff\Country.cs" />
+    <Compile Include="Data\Weapon stuff\WeaponDBInstance.cs" />
     <Compile Include="Logic\HTMLParser.cs" />
     <Compile Include="Data\Weapon stuff\Date.cs" />
     <Compile Include="Data\Weapon stuff\Weapon.cs" />
@@ -84,6 +99,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

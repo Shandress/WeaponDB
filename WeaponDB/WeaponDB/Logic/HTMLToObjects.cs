@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 using WeaponDB.Data;
 using WeaponDB.Data.Weapon_stuff;
 using WeaponDB.Exceptions;
+using Wintellect.Sterling.Database;
+using Wintellect.Sterling.Serialization;
 
 namespace WeaponDB.Logic
 {
@@ -60,19 +62,20 @@ namespace WeaponDB.Logic
                     switch (headers.ElementAt(i))
                     {
                         case "Type":
-                            WeaponType wType = new WeaponType(weaponType);
+                            WeaponType wType = new WeaponType();
+                            wType.Name = weaponType;
                             string[] types = currentColumn.InnerText.Split('\n');
                             if(types.Length == 0)
                             {
                                 wType.ActionTypes.Add(Constants.Unknown);
-                                wType.Subtype = Constants.Unknown;
+                                wType.SubType = Constants.Unknown;
                                 //throw new UnexpectedInputException("There should be something, I guess");
                             }
 
                             // Only action type is present.
                             if (types.Length == 1)
                             {
-                                wType.Subtype = weaponType;
+                                wType.SubType = weaponType;
 
                                 string actionType = (actionTypes.ContainsKey(types[0]))
                                 ? actionTypes[types[0]] : Constants.Unknown;
@@ -81,22 +84,34 @@ namespace WeaponDB.Logic
                             else
                             {
                                 int idx = types.Length - 1;
-                                wType.Subtype = (subTypes.ContainsKey(types[idx]))
+                                wType.SubType = (subTypes.ContainsKey(types[idx]))
                                     ? subTypes[types[idx]] : Constants.Unknown;
-                                for (int j = 0; j < types.Length - 1; j++)
+                                idx--;
+                                for (int j = 0; j <= idx; j++)
                                 {
-                                    string actionType = (actionTypes.ContainsKey(types[idx]))
-                                    ? actionTypes[types[idx]] : Constants.Unknown;
+                                    string actionType = (actionTypes.ContainsKey(types[j]))
+                                    ? actionTypes[types[j]] : Constants.Unknown;
                                     wType.ActionTypes.Add(actionType);
                                 }
                             }  
                             weapon.WeaponType = wType;
                             break;
                         case "Image":
-                            weapon.Image = GetImage(currentColumn, ParsingTarget.WeaponImage);
+                            string path = Constants.WeaponImgDir;
+                            string filename = weapon.Name; 
+                          
+                            Image img = (Image)GetImage(currentColumn, ParsingTarget.WeaponImage).Clone();
+                           
+
+                            SaveImage(img, Constants.WeaponImgDir, weapon.Name);
+
+                            weapon.ImageReference = Constants.WeaponImgDir + "/" + weapon.Name + ".jpg";
                             break;
                         case "Country":
                             weapon.Country = GetCountryInfo(currentColumn);
+                            break;
+                        case "Cartridge":
+                            weapon.Cartridges = GetCartridges(currentColumn);
                             break;
                         default:
                             PropertyInfo property = weapon.GetType().GetProperty(headers.ElementAt(i));
@@ -148,7 +163,15 @@ namespace WeaponDB.Logic
             HtmlNode imgNode = node.SelectSingleNode(@"//img[@class='" + imgClass + "']");
            if(imgNode == null)
            {
-               imgNode = node.SelectSingleNode(@"//a/img");
+               if(node.HasChildNodes)
+               {
+                   imgNode = node.SelectSingleNode(@"//a/img");
+               }
+               else
+               {
+                   return (Image)Image.FromFile(Constants.imgNotFound).Clone();
+               }
+               
            }
             string src = (imgNode.Attributes["src"] != null) ? imgNode.Attributes["src"].Value : string.Empty;
             if (src == string.Empty)
@@ -198,13 +221,47 @@ namespace WeaponDB.Logic
 
             if(x.Count() > 1)
             {
-                return new Country(name, GetImage(x.First(), ParsingTarget.Flag));
+                string fullPath = Constants.flagImgDir + "/" + name;
+                Image img = (Image)GetImage(x.First(), ParsingTarget.Flag).Clone();
+                SaveImage(img, Constants.flagImgDir, name);
+                return new Country(name, fullPath);  
+                
             }
             else
             {
-                return new Country(name, new Bitmap(10, 10));
+                return new Country(name, Constants.imgNotFound);
             }
             
+        }
+
+        /// <summary>
+        /// Gets the information about the ammo the weapon's using.
+        /// </summary>
+        /// <param name="node">An ansector node to nodes that contain the necessary data.</param>
+        /// <returns></returns>
+        private static List<string> GetCartridges(HtmlNode node)
+        {
+            return node.InnerText.Split('\n').ToList(); //node.SelectNodes(@"//a")
+                //.Where(n => n.NodeType == HtmlNodeType.Element)
+                //.Select(n => n.InnerText)
+                //.ToList();
+        }
+
+        private static void SaveImage(Image toSave, string path, string filename)
+        {
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            if (!File.Exists(path + "/" + filename))
+            {
+                if (filename.Contains("/"))
+                {
+                    filename = filename.Replace('/', ' ');
+                }
+                toSave.Save(path + "/" + filename + ".jpg");
+            }
+            toSave.Dispose();
         }
     }
 

@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using VelocityDb.Session;
-using VelocityDb;
 
 namespace WeaponDB.Data
 {
@@ -13,9 +11,12 @@ namespace WeaponDB.Data
     /// </summary>
     static class Constants
     {
-        public static readonly string SystemDir = "WeaponDB";
+        public static readonly string SystemDir = "weapondb";
         public static readonly string Unknown = "N/A";
-        
+        public static readonly string WeaponImgDir = @"./Images/Weapons";
+        public static readonly string imgNotFound = @"./Images/image-not-found.jpg";
+        public static readonly string flagImgDir = @"./Images/Flags";
+
         /// <summary>
         /// Contains xPath strings to different parts of the article.
         /// </summary>
@@ -28,6 +29,7 @@ namespace WeaponDB.Data
             public static readonly string article = @"//div[@id='mw-content-text']/table[3]/tr";
             public static readonly string header = @"//h1[@id='firstHeading']";
             public static readonly string articleLinks = @"//div[@id='mw-content-text']/ul[2]/li[5]/ul/li/a";
+            
         }
     }
 }
